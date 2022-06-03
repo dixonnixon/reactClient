@@ -1,7 +1,8 @@
 import React from "react";
 import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup';
+import { ListGroup, Breadcrumb } from 'react-bootstrap';
 import Comment from './Comment'
+import { Link } from 'react-router-dom';
 // import child from './Child';
 
 
@@ -20,10 +21,10 @@ function RenderCommnets({comments}) {
         console.log(comment.id);
         return (
             <ListGroup.Item key={comment.id}>
-        <div className="row">
-            <Comment comment={comment} />
-        </div>
-        </ListGroup.Item>
+                <div className="row">
+                    <Comment comment={comment} />
+                </div>
+            </ListGroup.Item>
         );
     }) ;
 
@@ -83,12 +84,24 @@ const DishDetail = (props) => {
         return (
             
             <div className="container">
+                <div className="row">
+                    <Breadcrumb>
+                    {/* <Breadcrumb.Item><Link to="/home">Home</Link></Breadcrumb.Item> */}
+                    {/* <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/home"}}>Home</Breadcrumb.Item> */}
+                    <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/menu"}}>Menu</Breadcrumb.Item>
+                    <Breadcrumb.Item active>{props.dish.name}</Breadcrumb.Item>
+                    </Breadcrumb>
+                    <div className="col-sm-12">
+                        <h3>{props.dish.name}</h3>
+                        <hr />
+                    </div>
+                </div>
                 <div className="row"> 
                 <RenderDish dish={props.dish} />
                 {/* <div  className="col-12 col-md-5 m-1">
                     <h4>Comments</h4>
                     <ListGroup > */}
-                <RenderCommnets comments={props.dish.comments}/>
+                <RenderCommnets comments={props.comments}/>
                     {/* </ListGroup>
                 </div> */}
             </div>

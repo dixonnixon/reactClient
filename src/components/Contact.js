@@ -1,8 +1,196 @@
 import React from 'react';
+import {Breadcrumb, Form, Col,  Row, Button} from 'react-bootstrap';
+import  { Link } from 'react-router-dom';
+// function Contact(props) {
+class Contact extends React.Component  {
+    constructor(props) {
+        super(props);
+        this.state = {
+            // firstname: '',
+            // lastname: '',
+            // email: '',
+            // telnum: '',
+            // agree: false,
+            // contactType: 'Tel.',
+            // message: '',   
+            feedback: {
+                firstname: '',
+                lastname: '',
+                email: '',
+                telnum: '',
+                agree: false,
+                contactType: 'Tel.',
+                message: '',    
+            },
+            touched: {
+                firstname: false,
+                lastname: false,
+                email: false,
+                telnum: false,
+            }
+        };
 
-function Contact(props) {
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
+    }
+
+    //for each form control here has been defined value and name variables
+    //to set state property as it defined in an id property  in targeted DOM element
+
+    //defining value is depends on target type where choosing between boolean and string
+    handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        // console.log(name);
+        // console.log("feedbackAssign", );
+
+        this.setState({
+            touched: { ...this.state.touched, [name] : true},//here I use touched state to immediately check validation
+            feedback: Object.assign(this.state.feedback, {
+                [name]: value
+            }),
+            active: name
+        });
+
+        // this.handleBlur(name);
+
+        // console.log(this.state, name, value);
+    }
+
+    handleSubmit(event) {
+
+        // console.log(JSON.stringify(this.state));
+        event.preventDefault();
+    }
+
+    handleBlur = (field) =>  (evt) => {
+        // console.log('handleBLur', evt);
+        this.setState({
+            touched: { ...this.state.touched, [field] : true}
+        });
+    }
+    
+    validators(name, error) {
+        const  validators = {
+            firstname: (prop) => {
+                if(this.state.touched.firstname && prop.length < 3) {
+                    error.firstname = 'First name should be longer!';
+                } else if(this.state.touched.firstname && prop.length > 10)
+                {
+                    error.firstname = "First NAme is   too long";
+                }
+                // console.log("validatorsErrorsfirstname", this.state.touched, prop, errors);
+                return error;
+            },
+            lastname: (prop)=>{
+                if(this.state.touched.lastname && prop.length < 3) {
+                    error.lastname = 'lastname should be longer!';
+                } else if(this.state.touched.lastname && prop.length > 10)
+                {
+                    error.lastname = "lastname is   too long";
+                }
+                return error;
+            },
+            email: (prop)=>{
+                if(this.state.touched.email && prop.split('').filter(x => x === '@').length !== 1) { //))))0_0
+                    error.email = "Insert correct email";
+                }
+                return error;
+            },
+            telnum: (prop)=>{
+                const expr = /^\d+$/;
+                if(this.state.touched.telnum && !expr.test(prop)) {
+                    error.telnum = "Only nubers telnum!";
+                }
+                return error;
+            }
+        };
+        // console.log("validators1", name, validators[name], errors);
+
+        return validators[name];
+    }
+
+    validateBy(prop, value) {
+        const error = {
+            [prop]: null
+        };
+        const validator = this.validators(prop, error);
+
+        // console.log("validateErrors1", prop, validator, value);
+        if(typeof validator === 'function') {
+            // console.log("validateErrors2", prop, value, errors, validator(value));
+
+            return validator(value);
+        }
+
+        return error;
+    }
+
+    validate() {
+        let errors = {};
+
+        
+
+        
+
+        const feedbackMap = new Map(Object.entries(this.state.feedback));
+        const feedbackMapIterator = feedbackMap[Symbol.iterator]();
+        for(const [prop,value] of feedbackMapIterator) {
+            // console.log(prop, 'value =' + value, this.validators(prop));
+            // console.log("valBy", this.validateBy(prop, value), prop, value);
+            // Object.assign(, errors);
+            errors = Object.assign(this.validateBy(prop, value), errors);
+            // errors = this.validateBy(prop, value);
+            
+        }
+        // console.log("asdf", name, errors);
+
+        // if(name) {
+        //     return errors[name];
+        // }
+
+        return errors;
+    }
+
+    
+
+    render() {
+    
+    // console.log("Render Contact errors", this.state);
+
+    // this.state.feedback.map((prop, index) => {
+    //     console.log("fback", prop, index);
+    // });
+
+    
+    // const feedbackMap = new Map(Object.entries(this.state.feedback));
+    // const feedbackMapIterator = feedbackMap[Symbol.iterator]();
+    // for(const [prop,value] of feedbackMapIterator) {
+    //     // console.log(prop, 'value =' + value, this.validators(prop));
+    //     console.log("errorsValidateBy", this.validateBy(prop, value));
+    // }
+
+    const errors = this.validate();
+
+    console.log('----------------------------------afterValidate', errors, this.state);
+
+    
     return(
         <div className="container">
+            <div className="row">
+                <Breadcrumb>
+                {/* <Breadcrumb.Item><Link to="/home">Home</Link></Breadcrumb.Item> */}
+                <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/home"}}>Home</Breadcrumb.Item>
+                <Breadcrumb.Item active>Contact us</Breadcrumb.Item>
+                </Breadcrumb>
+                <div className="col-sm-12">
+                <h3>Contact us</h3>
+                <hr />
+                </div>
+            </div>
             <div className="row row-content">
                 <div className="col-12">
                 <h3>Location Information</h3>
@@ -24,13 +212,109 @@ function Contact(props) {
                 <div className="col-12 col-sm-11 offset-sm-1">
                     <div className="btn-group" role="group">
                         <a role="button" className="btn btn-primary" href="tel:+85212345678"><i className="fa fa-phone"></i> Call</a>
-                        <a role="button" className="btn btn-info" href="#"><i className="fa fa-skype"></i> Skype</a>
+                        <a role="button" className="btn btn-info" href="/confusion/#"><i className="fa fa-skype"></i> Skype</a>
                         <a role="button" className="btn btn-success" href="mailto:confusion@food.net"><i className="fa fa-envelope-o"></i> Email</a>
                     </div>
                 </div>
             </div>
+            <div className='row row-content'>
+                <div className="col-sm-12">
+                    <h3>Send Us a feedback</h3>
+                </div>
+                <div className="col-12 col-md-9">
+                    <Form onSubmit={this.handleSubmit}>
+                        <Form.Group as={Row} className="mb-3" >
+                            <Form.Label htmlFor="firstname" md={2} column sm="2">First Name</Form.Label>
+                            <Col md={10}>
+                                <Form.Control  type="text" placeholder="Enter your name here" id="firstname"
+                                    name="firstname"
+                                    value={this.state.feedback.firstname} onChange={this.handleInputChange}
+                                    // isValid={errors.firstname === null && this.state.touched.firstname }
+                                    isValid={errors.firstname === null && this.state.touched.firstname && this.state.feedback.firstname !== ''}
+                                    isInvalid={errors.firstname !== null && this.state.feedback.firstname !== ''}
+                                    onBlur={this.handleBlur('firstname')}
+                                />
+                                <Form.Control.Feedback type="invalid">{errors.firstname}</Form.Control.Feedback>
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className='mb-3'>
+                            <Form.Label htmlFor="lastname" md={2} column sm="2">Last Name</Form.Label>
+                            <Col md={10}>
+                                <Form.Control  type="text" placeholder="Enter your last name here" id="lastname"
+                                    name="lastname"
+                                    value={this.state.feedback.lastname} onChange={this.handleInputChange}
+                                    isValid={errors.lastname === null && this.state.touched.lastname}
+                                    isInvalid={errors.lastname !== null && this.state.feedback.lastname !== ''}
+                                    onBlur={this.handleBlur('lastname')}
+                                />
+                                <Form.Control.Feedback type="invalid">{errors.lastname}</Form.Control.Feedback>
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className='mb-3'>
+                            <Form.Label htmlFor="telnum" md={2} column sm="2">Tel.</Form.Label>
+                            <Col md={10}>
+                                <Form.Control  type="tel" placeholder="Enter your cellphone number here" id="telnum"
+                                    name="telnum"
+                                    value={this.state.telnum} onChange={this.handleInputChange}
+                                    isValid={errors.telnum === null && this.state.touched.telnum && this.state.feedback.telnum !== ''}
+                                    isInvalid={errors.telnum !== null && this.state.feedback.telnum !== ''}
+                                    onBlur={this.handleBlur('telnum')}
+                                />
+                                <Form.Control.Feedback type="invalid">{errors.telnum}</Form.Control.Feedback>
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className='mb-3'>
+                            <Form.Label htmlFor="email" md={2} column sm="2">email</Form.Label>
+                            <Col md={10}>
+                                <Form.Control  type="email" placeholder="Enter your email here" id="email"
+                                    name="email"
+                                    value={this.state.email} onChange={this.handleInputChange}
+                                    isValid={errors.email === null && this.state.touched.email}
+                                    isInvalid={errors.email !== null && this.state.feedback.email !== ''}
+                                    onBlur={this.handleBlur('email')}
+                                />
+                                <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className='mb-3'>
+                            <Col md={{size: 6, offset: 2}}>
+                                <Form.Check type='checkbox' >
+                                    <Form.Check.Input type="checkbox" isValid checked={this.state.agree} 
+                                        onChange={this.handleInputChange} id='agree' name='agree'
+                                    />
+                                    <Form.Check.Label><b>May we contact you?</b></Form.Check.Label>
+                                </Form.Check>
+                            </Col>
+                            <Col md={{size: 3, offset: 1}}>
+                            <Form.Select name="contactType" id="contactType" value={this.state.contactType}
+                                onChange={this.handleInputChange}
+                            >
+                                <option>Tel.</option>
+                                <option>Email</option>
+                            </Form.Select>
+                            </Col>
+                        </Form.Group>
+                        <Form.Group as={Row} className='mb-3'>
+                            <Form.Label htmlFor="message" md={2} column sm="2">Your feedback</Form.Label>
+                            <Col md={10}>
+                                <Form.Control as="textarea" placeholder="Enter your feedback here" id="message"
+                                    name="message"
+                                    value={this.state.message} rows={3} onChange={this.handleInputChange}
+                                />
+                            </Col>
+                        </Form.Group>
+                        <Form.Group row="true">
+                            <Col md={{size: 10, offset: 2}}>
+                                <Button type="submit" color="primary">Share</Button>
+                            </Col>
+                        </Form.Group>
+                    </Form>
+                </div>
+            </div>
         </div>
-    );
+        );
+    }
 }
 
 export default Contact;

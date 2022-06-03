@@ -8,6 +8,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Home from './Home';
 import Contact from './Contact';
+import About from './About';
 
 
 import { DISHES } from '../shared/dishes'
@@ -16,7 +17,7 @@ import { PROMOTIONS } from '../shared/promotions'
 import { LEADERS } from '../shared/leaders'
 
 import React from 'react';
-import { Routes, Route, Navigate  } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams  } from 'react-router-dom';
 
 
 class Main extends React.Component {
@@ -51,6 +52,25 @@ class Main extends React.Component {
             />
         );
       }
+      
+      const DishWithId = () => {
+        let params = useParams();
+        // console.log("Match", match, params, this.state.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10)));
+        return (
+          <DishDetail 
+            dish={this.state.dishes
+                .filter((dish) => dish.id === parseInt(params.dishId, 10))[0]
+            }
+            comments={this.state.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10))}
+          />
+        );
+      };
+
+      const AboutPage = () => {
+        return (
+          <About leaders={this.state.leaders} />
+        );
+      };
     
     return (
       <div >
@@ -59,7 +79,10 @@ class Main extends React.Component {
         <Routes>
             <Route path="/"  >
               <Route path="home" element={<HomePage />}/>
-              <Route path='menu' element={<Menu dishes={this.state.dishes}/>} /> {/*using arrayfunc for props passing*/}
+              <Route path="aboutus" element={<AboutPage />}/>
+              <Route path='menu' element={<Menu dishes={this.state.dishes}/>} />
+                 {/*using arrayfunc for props passing*/}
+              <Route path="menu/:dishId" element={<DishWithId />} />
               <Route path='contactus' element={ <Contact />} />
               <Route path="*" element={<HomePage />} />
             </Route>
