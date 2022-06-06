@@ -1,22 +1,46 @@
-import React from 'react';
-import { Navbar, Nav, NavLink } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Navbar, Nav, NavLink, Modal, Button, Form, Label } from 'react-bootstrap';
 import { Link, Outlet } from "react-router-dom";
+
+function Example() {
+    const [show, setShow] = useState(false);
+
+}
 
 export default class Header extends React.Component {
     constructor(props) {
         super(props);
 
+
+
         this.toggleNav = this.toggleNav.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
 
         this.state = {
+            isModalOpened: false,
             isNavOpen: false
         };
+
+
+    }
+
+    toggleModal() {
+        this.setState({
+            isModalOpened: !this.state.isModalOpened
+        });
     }
 
     toggleNav() {
         this.setState({
             isNavOpen: !this.state.isNavOpen
         });
+    }
+
+    handleLogin(e) {
+        this.toggleModal();
+        console.log(this.username.value, this.password.value, this.remember.checked);
+        e.preventDefault();
     }
 
     render() {
@@ -49,6 +73,12 @@ export default class Header extends React.Component {
                                     <Link className="nav-link" to='/contactus'><span className="fa fa-address-card fa-lg"></span> Contact Us</Link>
                                 </Nav.Item>
                             </Nav>
+                            <Nav className='ml-auto'>
+                                <Nav.Item>
+                                    <Button outline="true" onClick={this.toggleModal}>
+                                        <span className='fa fa-sign-in fa-lg'>Login</span></Button>
+                                </Nav.Item>
+                            </Nav>
                             <Outlet />
                     </Navbar.Collapse>
                 </div>
@@ -68,6 +98,43 @@ export default class Header extends React.Component {
                     </div>
                 </div>
                 </div>
+                <Modal show={this.state.isModalOpened} onShow={() => this.toggleModal}
+                    onHide={this.toggleModal}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Login</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={this.handleLogin}>
+                            <Form.Group>
+                                <Form.Label htmlFor="username">Username</Form.Label>
+                                <Form.Control type="text" placeholder="Enter username"
+                                    id="username" name="username" 
+                                    ref={(input) => this.username = input}
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label htmlFor="password">Password</Form.Label>
+                                <Form.Control type="password" placeholder="Enter username"
+                                    id="password" name="password"
+                                    ref={(input) => this.password = input}
+
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                
+                                <Form.Check 
+                                    type="checkbox"
+                                    id="remember"
+                                    label="remember me"
+                                    ref={(input) => this.remember = input}
+
+                                /> 
+                            </Form.Group>
+                            <Button type="submit" value="submit" color="primary">Login</Button>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
             </React.Fragment>
         );
     }

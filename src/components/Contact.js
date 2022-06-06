@@ -44,9 +44,6 @@ class Contact extends React.Component  {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
-        // console.log(name);
-        // console.log("feedbackAssign", );
-
         this.setState({
             touched: { ...this.state.touched, [name] : true},//here I use touched state to immediately check validation
             feedback: Object.assign(this.state.feedback, {
@@ -55,19 +52,14 @@ class Contact extends React.Component  {
             active: name
         });
 
-        // this.handleBlur(name);
-
-        // console.log(this.state, name, value);
     }
 
     handleSubmit(event) {
 
-        // console.log(JSON.stringify(this.state));
         event.preventDefault();
     }
 
     handleBlur = (field) =>  (evt) => {
-        // console.log('handleBLur', evt);
         this.setState({
             touched: { ...this.state.touched, [field] : true}
         });
@@ -108,8 +100,6 @@ class Contact extends React.Component  {
                 return error;
             }
         };
-        // console.log("validators1", name, validators[name], errors);
-
         return validators[name];
     }
 
@@ -119,10 +109,7 @@ class Contact extends React.Component  {
         };
         const validator = this.validators(prop, error);
 
-        // console.log("validateErrors1", prop, validator, value);
         if(typeof validator === 'function') {
-            // console.log("validateErrors2", prop, value, errors, validator(value));
-
             return validator(value);
         }
 
@@ -132,25 +119,12 @@ class Contact extends React.Component  {
     validate() {
         let errors = {};
 
-        
-
-        
-
         const feedbackMap = new Map(Object.entries(this.state.feedback));
         const feedbackMapIterator = feedbackMap[Symbol.iterator]();
         for(const [prop,value] of feedbackMapIterator) {
-            // console.log(prop, 'value =' + value, this.validators(prop));
-            // console.log("valBy", this.validateBy(prop, value), prop, value);
-            // Object.assign(, errors);
             errors = Object.assign(this.validateBy(prop, value), errors);
-            // errors = this.validateBy(prop, value);
             
         }
-        // console.log("asdf", name, errors);
-
-        // if(name) {
-        //     return errors[name];
-        // }
 
         return errors;
     }
@@ -158,24 +132,10 @@ class Contact extends React.Component  {
     
 
     render() {
-    
-    // console.log("Render Contact errors", this.state);
-
-    // this.state.feedback.map((prop, index) => {
-    //     console.log("fback", prop, index);
-    // });
-
-    
-    // const feedbackMap = new Map(Object.entries(this.state.feedback));
-    // const feedbackMapIterator = feedbackMap[Symbol.iterator]();
-    // for(const [prop,value] of feedbackMapIterator) {
-    //     // console.log(prop, 'value =' + value, this.validators(prop));
-    //     console.log("errorsValidateBy", this.validateBy(prop, value));
-    // }
 
     const errors = this.validate();
 
-    console.log('----------------------------------afterValidate', errors, this.state);
+    // console.log('----------------------------------afterValidate', errors, this.state);
 
     
     return(

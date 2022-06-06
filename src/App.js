@@ -7,15 +7,20 @@ import  Main from './components/Main';
 
 import './App.css';
 import React from 'react';
+import { Provider } from 'react-redux';
+import  configureStore from './redux/configureStore'
 
 class App extends React.Component {
+  
   render() {
     return (
+      <Provider store={configureStore}>
       <BrowserRouter>
       <div className="App">
         <Main />
       </div>
       </BrowserRouter>
+      </Provider>
     );
   }
   

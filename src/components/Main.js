@@ -11,13 +11,61 @@ import Contact from './Contact';
 import About from './About';
 
 
-import { DISHES } from '../shared/dishes'
-import { COMMENTS } from '../shared/comments'
-import { PROMOTIONS } from '../shared/promotions'
-import { LEADERS } from '../shared/leaders'
+// import { DISHES } from '../shared/dishes'
+// import { COMMENTS } from '../shared/comments'
+// import { PROMOTIONS } from '../shared/promotions'
+// import { LEADERS } from '../shared/leaders'
 
 import React from 'react';
-import { Routes, Route, Navigate, useParams  } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams, useNavigate  } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+
+//so wee need a state container to manage itself through a bunch of independent or related
+//components *REDUX<-Flux, Elm, ImmutableJs
+//1. It makes states mutations predictable
+//2. Abilities:
+/**
+ * Logging of how state changing through time
+ * API handling?
+ * Undo/redo?
+ * state persistance
+ * "time-travel debugging"
+ * 
+ */
+//3. Reducer  functions (can modify the states) Pure function, recieves the actions from dispatch
+//  and returns the next state
+//  it stored in store
+//4. State tree is in the store
+//5. State stored in plain obj
+//  type field spec. how to change something in state () payload
+//6. Redux store holds the state value
+//  using methods createStore()
+//  dispatch() - update state
+//  getState() - get updated state from store
+//  subscribe() - runs every time when action is dispatched
+//7. use react-redux package with methods:
+//  connect() - generate wrapper "container" that subscribes to the store
+//    mapStateToProps() - ?
+//    mapDispatchToProps() - ?
+//  using <Provider> to wrap root
+
+export const withRouter = (Component) => {
+	const Wrapper = (props) => {
+		const history = useNavigate();
+		return <Component history={history} {...props} />;
+	};
+	return Wrapper;
+};
+
+const mapStateToProps = state => {
+  return {
+    dishes: state.dishes,
+    comments: state.comments,
+    promotions: state.promotions,
+    leaders: state.leaders
+  };
+};
 
 
 class Main extends React.Component {
@@ -25,13 +73,13 @@ class Main extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      dishes: DISHES,
-      comments: COMMENTS,
-      promotions: PROMOTIONS,
-      leaders: LEADERS,
+    // this.props = {
+      // dishes: DISHES,
+      // comments: COMMENTS,
+      // promotions: PROMOTIONS,
+      // leaders: LEADERS,
       // selectedDish: null
-    };
+    // };
   }
 
   // handleSelectDish(dishId) {
@@ -42,33 +90,33 @@ class Main extends React.Component {
   // }
 
   render() {
-      console.log(this.state.selectedDish, this.state.dishes.filter((dish) => dish.id === this.state.selectedDish)[0]);
+      console.log(this.props.selectedDish, this.props.dishes.filter((dish) => dish.id === this.props.selectedDish)[0]);
       const HomePage = () => {
         return(
             <Home 
-              dish={this.state.dishes.filter((dish) => dish.featured)[0]}
-              promotion={this.state.promotions.filter((promo) => promo.featured)[0]}
-              leader={this.state.leaders.filter((leader) => leader.featured)[0]}
+              dish={this.props.dishes.filter((dish) => dish.featured)[0]}
+              promotion={this.props.promotions.filter((promo) => promo.featured)[0]}
+              leader={this.props.leaders.filter((leader) => leader.featured)[0]}
             />
         );
       }
       
       const DishWithId = () => {
         let params = useParams();
-        // console.log("Match", match, params, this.state.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10)));
+        // console.log("Match", match, params, this.props.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10)));
         return (
           <DishDetail 
-            dish={this.state.dishes
+            dish={this.props.dishes
                 .filter((dish) => dish.id === parseInt(params.dishId, 10))[0]
             }
-            comments={this.state.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10))}
+            comments={this.props.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10))}
           />
         );
       };
 
       const AboutPage = () => {
         return (
-          <About leaders={this.state.leaders} />
+          <About leaders={this.props.leaders} />
         );
       };
     
@@ -80,7 +128,7 @@ class Main extends React.Component {
             <Route path="/"  >
               <Route path="home" element={<HomePage />}/>
               <Route path="aboutus" element={<AboutPage />}/>
-              <Route path='menu' element={<Menu dishes={this.state.dishes}/>} />
+              <Route path='menu' element={<Menu dishes={this.props.dishes}/>} />
                  {/*using arrayfunc for props passing*/}
               <Route path="menu/:dishId" element={<DishWithId />} />
               <Route path='contactus' element={ <Contact />} />
@@ -90,12 +138,12 @@ class Main extends React.Component {
            
         </Routes>
         {/* <Menu 
-            dishes={this.state.dishes} 
+            dishes={this.props.dishes} 
             onClick={(dishId) => this.handleSelectDish(dishId)}
         />
         <DishDetail 
-            dish={this.state.dishes
-                .filter((dish) => dish.id === this.state.selectedDish)[0]
+            dish={this.props.dishes
+                .filter((dish) => dish.id === this.props.selectedDish)[0]
             }
         /> */}
         <Footer />
@@ -105,4 +153,4 @@ class Main extends React.Component {
   
 }
 
-export default Main;
+export default withRouter(connect(mapStateToProps)(Main));
