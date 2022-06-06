@@ -15,145 +15,20 @@ const required = (val) => val && val.length,
 class Contact extends React.Component  {
     constructor(props) {
         super(props);
-        // this.state = { //delegated to react-redux-form
-        //     // firstname: '',
-        //     // lastname: '',
-        //     // email: '',
-        //     // telnum: '',
-        //     // agree: false,
-        //     // contactType: 'Tel.',
-        //     // message: '',   
-        //     feedback: {
-        //         firstname: '',
-        //         lastname: '',
-        //         email: '',
-        //         telnum: '',
-        //         agree: false,
-        //         contactType: 'Tel.',
-        //         message: '',    
-        //     },
-        //     touched: {
-        //         firstname: false,
-        //         lastname: false,
-        //         email: false,
-        //         telnum: false,
-        //     }
-        // };
 
         this.handleSubmit = this.handleSubmit.bind(this);
-        // this.handleInputChange = this.handleInputChange.bind(this);
-        // this.handleBlur = this.handleBlur.bind(this);
     }
 
-    //for each form control here has been defined value and name variables
-    //to set state property as it defined in an id property  in targeted DOM element
-
-    //defining value is depends on target type where choosing between boolean and string
-    // handleInputChange(event) { //delegated to react-redux-form
-    //     const target = event.target;
-    //     const value = target.type === 'checkbox' ? target.checked : target.value;
-    //     const name = target.name;
-
-    //     this.setState({
-    //         touched: { ...this.state.touched, [name] : true},//here I use touched state to immediately check validation
-    //         feedback: Object.assign(this.state.feedback, {
-    //             [name]: value
-    //         }),
-    //         active: name
-    //     });
-
-    // }
-
-    // handleSubmit(event) {
     handleSubmit(values) {
         console.log(values);
-        // event.preventDefault();
     }
 
-    // handleBlur = (field) =>  (evt) => {//delegated to react-redux-form
-    //     this.setState({
-    //         touched: { ...this.state.touched, [field] : true}
-    //     });
-    // }
-    
-    // validators(name, error) {//delegated to react-redux-form
-    //     const  validators = {
-    //         firstname: (prop) => {
-    //             if(this.state.touched.firstname && prop.length < 3) {
-    //                 error.firstname = 'First name should be longer!';
-    //             } else if(this.state.touched.firstname && prop.length > 10)
-    //             {
-    //                 error.firstname = "First NAme is   too long";
-    //             }
-    //             // console.log("validatorsErrorsfirstname", this.state.touched, prop, errors);
-    //             return error;
-    //         },
-    //         lastname: (prop)=>{
-    //             if(this.state.touched.lastname && prop.length < 3) {
-    //                 error.lastname = 'lastname should be longer!';
-    //             } else if(this.state.touched.lastname && prop.length > 10)
-    //             {
-    //                 error.lastname = "lastname is   too long";
-    //             }
-    //             return error;
-    //         },
-    //         email: (prop)=>{
-    //             if(this.state.touched.email && prop.split('').filter(x => x === '@').length !== 1) { //))))0_0
-    //                 error.email = "Insert correct email";
-    //             }
-    //             return error;
-    //         },
-    //         telnum: (prop)=>{
-    //             const expr = /^\d+$/;
-    //             if(this.state.touched.telnum && !expr.test(prop)) {
-    //                 error.telnum = "Only nubers telnum!";
-    //             }
-    //             return error;
-    //         }
-    //     };
-    //     return validators[name];
-    // }
-
-    // validateBy(prop, value) {//delegated to react-redux-form
-    //     const error = {
-    //         [prop]: null
-    //     };
-    //     const validator = this.validators(prop, error);
-
-    //     if(typeof validator === 'function') {
-    //         return validator(value);
-    //     }
-
-    //     return error;
-    // }
-
-    // validate() {//delegated to react-redux-form
-    //     let errors = {};
-
-    //     const feedbackMap = new Map(Object.entries(this.state.feedback));
-    //     const feedbackMapIterator = feedbackMap[Symbol.iterator]();
-    //     for(const [prop,value] of feedbackMapIterator) {
-    //         errors = Object.assign(this.validateBy(prop, value), errors);
-            
-    //     }
-
-    //     return errors;
-    // }
-
-    
-
     render() {
-
-    // const errors = this.validate();//delegated to react-redux-form
-
-    // console.log('----------------------------------afterValidate', errors, this.state);
-
     
     return(
         <div className="container">
             <div className="row">
                 <Breadcrumb>
-                {/* <Breadcrumb.Item><Link to="/home">Home</Link></Breadcrumb.Item> */}
                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/home"}}>Home</Breadcrumb.Item>
                 <Breadcrumb.Item active>Contact us</Breadcrumb.Item>
                 </Breadcrumb>
@@ -287,31 +162,22 @@ class Contact extends React.Component  {
                                 />
                             </Col>
                         </Row>
-                        {/* <Form.Group as={Row} className='mb-3'> */}
                         <Row className="form-group mb-3">
                             <Col md={{size: 6, offset: 2}}>
-                                {/* <Form.Check type='checkbox' > */}
                                 <div className='form-check'>
-                                    {/* <Form.Check.Input type="checkbox" isValid checked={this.state.agree}  */}
                                     <Control.checkbox 
                                         model=".agree" 
                                         className='form-check-input'
-                                        // isValid checked={this.state.agree} 
-                                        // onChange={this.handleInputChange}
                                         id='agree' name='agree'
                                     />
                                     <Form.Check.Label><b>May we contact you?</b></Form.Check.Label>
-                                {/* </Form.Check> */}
                                 </div>
                             </Col>
                             <Col md={{size: 3, offset: 1}}>
-                            {/* <Form.Select name="contactType" id="contactType" value={this.state.contactType} */}
                             <Control.select 
                                 model=".contactType"
                                 name="contactType" 
                                 id="contactType" 
-                                // value={this.state.contactType}
-                                // onChange={this.handleInputChange}
                                 className='form-control'
                             >
                                 <option>Tel.</option>
@@ -319,7 +185,6 @@ class Contact extends React.Component  {
                             </Control.select >
                             </Col>
                         </Row>
-                        {/* <Form.Group as={Row} className='mb-3'> */}
                         <Row className="form-group mb-3">
                             <Form.Label htmlFor="message" md={2} column sm="2">Your feedback</Form.Label>
                             <Col md={10}>
@@ -329,7 +194,6 @@ class Contact extends React.Component  {
                                     name="message"
                                     className='form-control'
                                     rows={3}
-                                    // value={this.state.message}  onChange={this.handleInputChange}
                                 />
                             </Col>
                         </Row>
@@ -338,7 +202,6 @@ class Contact extends React.Component  {
                                 <Button type="submit" color="primary">Share</Button>
                             </Col>
                         </Row>
-                    {/* </Form> */}
                     </LocalForm>
                 </div>
             </div>
