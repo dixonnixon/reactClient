@@ -3,9 +3,11 @@ import { Dishes } from './dishes';
 import { Comments } from './comments';
 import { Leaders } from './leaders';
 import { Promotions } from './promotions';
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 
-import { Reducer, initialState } from './reducer';
+// import { Reducer, initialState } from './reducer';
 
 // //creating redux store
 // export const ConfigureStore = () => {
@@ -27,7 +29,8 @@ export  const configureStore = () => {
            comments: Comments,
            leaders: Leaders,
            promotions: Promotions
-       })
+       }),
+       applyMiddleware(thunk, logger) //allow our store to use middleware
    );
 
    return store;

@@ -20,7 +20,7 @@ import React from 'react';
 import { Routes, Route, Navigate, useParams, useNavigate  } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { addComment } from '../redux/ActionCreators'; //actionCrator 
+import { addComment, fetchDishes } from '../redux/ActionCreators'; //actionCrator 
 
 
 //so wee need a state container to manage itself through a bunch of independent or related
@@ -71,7 +71,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => ({
   addComment: (dishId, rating, author, comment) => 
-    dispatch(addComment(dishId, rating, author, comment)) //here is an imported action creator for Comment to change our app state 
+    dispatch(addComment(dishId, rating, author, comment)), //here is an imported action creator for Comment to change our app state 
+  fetchDishes: () => {dispatch(fetchDishes())} //pass our ActionCreator of fetchDishes into the props of main component
 });
 
 
@@ -96,12 +97,19 @@ class Main extends React.Component {
   //   });
   // }
 
+  componentDidMount() {
+    this.props.fetchDishes();
+  }
+
   render() {
-      console.log(this.props.selectedDish, this.props.dishes.filter((dish) => dish.id === this.props.selectedDish)[0]);
+      
+      console.log("render MAin", this.props, this.props.selectedDish, this.props.dishes.dishes.filter((dish) => dish.id === this.props.selectedDish)[0]);
       const HomePage = () => {
         return(
             <Home 
-              dish={this.props.dishes.filter((dish) => dish.featured)[0]}
+              dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
+              dishesLoadind={this.props.dishes.isLoading}
+              dishesErrMsg={this.props.dishes.errmsg}
               promotion={this.props.promotions.filter((promo) => promo.featured)[0]}
               leader={this.props.leaders.filter((leader) => leader.featured)[0]}
             />
@@ -113,9 +121,11 @@ class Main extends React.Component {
         // console.log("Match", match, params, this.props.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10)));
         return (
           <DishDetail 
-            dish={this.props.dishes
+            dish={this.props.dishes.dishes
                 .filter((dish) => dish.id === parseInt(params.dishId, 10))[0]
             }
+            isLoading={this.props.dishes.isLoading}
+            errmsg={this.props.dishes.errmsg}
             comments={this.props.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10))}
             addComment={this.props.addComment}
           />

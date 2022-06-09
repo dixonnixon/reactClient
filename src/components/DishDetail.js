@@ -3,7 +3,10 @@ import Card from 'react-bootstrap/Card';
 import { ListGroup, Breadcrumb } from 'react-bootstrap';
 import Comment from './Comment'
 import { CommentForm } from './CommentForm'
+import { Loading } from "./Loading";
+
 import { Link } from 'react-router-dom';
+
 // import child from './Child';
 
 
@@ -58,7 +61,27 @@ function RenderDish({dish}) {
 
 
 const DishDetail = (props) => {
-    if(props.dish !== undefined) {
+    if(props.isLoading) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading />
+
+                </div>
+            </div>
+        );
+    }
+    else if(props.errmsg) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <h4>{props.errmsg}</h4>
+                </div>
+            </div>
+        );
+    }
+
+    else if(props.dish !== undefined) {
         return (
             
             <div className="container">
