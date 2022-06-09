@@ -20,6 +20,8 @@ import React from 'react';
 import { Routes, Route, Navigate, useParams, useNavigate  } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { addComment } from '../redux/ActionCreators'; //actionCrator 
+
 
 //so wee need a state container to manage itself through a bunch of independent or related
 //components *REDUX<-Flux, Elm, ImmutableJs
@@ -67,6 +69,11 @@ const mapStateToProps = state => {
   };
 };
 
+const mapDispatchToProps = (dispatch) => ({
+  addComment: (dishId, rating, author, comment) => 
+    dispatch(addComment(dishId, rating, author, comment)) //here is an imported action creator for Comment to change our app state 
+});
+
 
 class Main extends React.Component {
 
@@ -110,6 +117,7 @@ class Main extends React.Component {
                 .filter((dish) => dish.id === parseInt(params.dishId, 10))[0]
             }
             comments={this.props.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10))}
+            addComment={this.props.addComment}
           />
         );
       };
@@ -153,4 +161,4 @@ class Main extends React.Component {
   
 }
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));

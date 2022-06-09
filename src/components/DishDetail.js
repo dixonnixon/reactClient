@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
     // componentDidUpdate() { //didUpdate method invoked after render
     //     console.log("componentDidUpdate() invoked Dish");
     // }
-function RenderCommnets({comments}) {
+function RenderCommnets({comments, addComment, dishId}) {
     const commentsView = comments.map((comment) => {
         console.log(comment.id);
         return (
@@ -35,7 +35,7 @@ function RenderCommnets({comments}) {
             <ListGroup >
                 {commentsView}
             </ListGroup>
-            <CommentForm />
+            <CommentForm dishId={dishId} addComment={addComment}/>
         </div>
     );
 }
@@ -75,7 +75,10 @@ const DishDetail = (props) => {
                 <div className="row"> 
                     <RenderDish dish={props.dish} />
                     
-                    <RenderCommnets comments={props.comments}/>
+                    <RenderCommnets comments={props.comments}
+                        addComment={props.addComment}
+                        dishId={props.dish.id}
+                    />
                         
                 </div>
             </div>
