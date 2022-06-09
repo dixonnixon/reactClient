@@ -8,16 +8,19 @@ import  Main from './components/Main';
 import './App.css';
 import React from 'react';
 import { Provider } from 'react-redux';
-import  configureStore from './redux/configureStore'
+import  { configureStore } from './redux/configureStore'
+
+
+const store = configureStore();
 
 
 class App extends React.Component {
   
   render() {
-    configureStore.subscribe(() => console.log(configureStore.getState()))
+    // configureStore.subscribe(() => console.log(configureStore.getState()))
 
     return (
-      <Provider store={configureStore}>
+      <Provider store={store}>
       <BrowserRouter>
       <div className="App">
         <Main />

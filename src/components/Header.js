@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Navbar, Nav, NavLink, Modal, Button, Form, Label } from 'react-bootstrap';
 import { Link, Outlet } from "react-router-dom";
 
-function Example() {
-    const [show, setShow] = useState(false);
+// function Example() {
+//     const [show, setShow] = useState(false);
 
-}
+// }
 
 export default class Header extends React.Component {
     constructor(props) {
@@ -117,7 +117,7 @@ export default class Header extends React.Component {
                                 <Form.Label htmlFor="password">Password</Form.Label>
                                 <Form.Control type="password" placeholder="Enter username"
                                     id="password" name="password"
-                                    ref={(input) => this.password = input}
+                                    ref={(input) => this.password = input} //uncontrolled
 
                                 />
                             </Form.Group>
