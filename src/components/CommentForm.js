@@ -20,10 +20,10 @@ export  class CommentForm extends React.Component {
         };
     }
 
-    handleSubmit(values) {
-        console.log(values);
+    handleSubmit( values) {
+        console.log("handleSubmit CommentsForm",values);
         this.toggleModal();
-        this.props.addComment(this.props.dishId, values.rating, values.author, values.message);
+        this.props.postComment(this.props.dishId, values.rating, values.author, values.message);
     }
 
     toggleModal() {

@@ -22,7 +22,7 @@ import { baseUrl } from "../shared/baseUrl";
     // componentDidUpdate() { //didUpdate method invoked after render
     //     console.log("componentDidUpdate() invoked Dish");
     // }
-function RenderCommnets({comments, addComment, dishId}) {
+function RenderCommnets({comments, postComment, dishId}) {
     const commentsView = comments.map((comment) => {
         console.log(comment.id);
         return (
@@ -40,7 +40,7 @@ function RenderCommnets({comments, addComment, dishId}) {
             <ListGroup >
                 {commentsView}
             </ListGroup>
-            <CommentForm dishId={dishId} addComment={addComment}/>
+            <CommentForm dishId={dishId} postComment={postComment}/>
         </div>
     );
 }
@@ -106,7 +106,7 @@ const DishDetail = (props) => {
                     <RenderDish dish={props.dish} />
                     
                     <RenderCommnets comments={props.comments}
-                        addComment={props.addComment}
+                        postComment={props.postComment}
                         dishId={props.dish.id}
                     />
                         

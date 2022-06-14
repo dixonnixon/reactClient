@@ -27,8 +27,8 @@ export const Comments = (state = {
         case ActionTypes.ADD_COMMENT: //only comments part of reducer will change our immutable state
             let comment = action.payload; //here we pass payload(a form data in our case)
             //inside a new comment
-            comment.id = state.comments.length;//???
-            comment.date = new Date().toISOString(); //should be persistent
+            // comment.id = state.comments.length;//???
+            // comment.date = new Date().toISOString(); //should be persistent
             return { ...state, comments: state.comments.concat(comment) }; //create mutation
 
         default:

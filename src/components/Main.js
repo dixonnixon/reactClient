@@ -20,7 +20,8 @@ import React from 'react';
 import { Routes, Route, Navigate, useParams, useNavigate  } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { addComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators'; //actionCrator 
+// import { addComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators'; //actionCrator 
+import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators'; //actionCrator 
 import { actions } from 'react-redux-form';
 
 //so wee need a state container to manage itself through a bunch of independent or related
@@ -74,8 +75,8 @@ const mapStateToProps = state => {
 
 //here actions passed into the component
 const mapDispatchToProps = (dispatch) => ({
-  addComment: (dishId, rating, author, comment) => 
-    dispatch(addComment(dishId, rating, author, comment)), //here is an imported action creator for Comment to change our app state 
+  postComment: (dishId, rating, author, comment) => 
+    dispatch(postComment(dishId, rating, author, comment)), //here is an imported action creator for Comment to change our app state 
   fetchDishes: () => {dispatch(fetchDishes())}, //pass our ActionCreator of fetchDishes into the props of main component
   fetchPromos: () => {dispatch(fetchPromos())}, //pass our ActionCreator of fetchDishes into the props of main component
   fetchComments: () => {dispatch(fetchComments())}, //pass our ActionCreator of fetchDishes into the props of main component
@@ -139,7 +140,7 @@ class Main extends React.Component {
             errmsg={this.props.dishes.errmsg}
             comments={this.props.comments.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10))}
             commensterrmsg={this.props.comments.errmsg}
-            addComment={this.props.addComment}
+            postComment={this.props.postComment}
           />
         );
       };

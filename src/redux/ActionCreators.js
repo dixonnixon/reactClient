@@ -2,15 +2,53 @@ import * as ActionTypes from './ActionTypes';
 // import { DISHES } from '../shared/dishes';
 import { baseUrl } from '../shared/baseUrl';
 
-export const addComment = (dishId, rating, author, comment) => ({
+export const addComment = (comment) => ({
     type: ActionTypes.ADD_COMMENT, //type is the unique name of the action
-    payload: { //here we define what content should action returns
+    // payload: { //here we define what content should action returns
+    //     dishId: dishId,
+    //     rating: rating,
+    //     author: author,
+    //     comment: comment
+    // }
+    payload: comment
+});
+
+export const postComment =  (dishId, rating, author, comment) => (dispatch) => {
+    const newComment = {
         dishId: dishId,
         rating: rating,
         author: author,
         comment: comment
-    }
-});
+    };
+    newComment.date = new Date().toISOString();
+
+    return fetch(baseUrl + 'comments', {
+        method: "POST",
+        body: JSON.stringify(newComment),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: "same-origin"
+    })
+    .then(response => {
+        if(response.ok) {
+            return response;
+        }
+        else {
+            let error = new Error('Error ' + response.status
+                + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+        }
+    }, error => {
+        let errmsg = new Error(error.message);
+        throw errmsg;
+    })
+    .then(response => response.json())
+    .then(response => dispatch(addComment(response)))
+    .catch(error => console.log('PostComments', error.message));
+
+};
 
 //fetchDishes is a Thunk
 export const fetchDishes = () => (dispatch) => {
