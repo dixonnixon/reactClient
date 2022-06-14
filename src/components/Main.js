@@ -20,8 +20,8 @@ import React from 'react';
 import { Routes, Route, Navigate, useParams, useNavigate  } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { addComment, fetchDishes } from '../redux/ActionCreators'; //actionCrator 
-
+import { addComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators'; //actionCrator 
+import { actions } from 'react-redux-form';
 
 //so wee need a state container to manage itself through a bunch of independent or related
 //components *REDUX<-Flux, Elm, ImmutableJs
@@ -54,13 +54,15 @@ import { addComment, fetchDishes } from '../redux/ActionCreators'; //actionCrato
 
 export const withRouter = (Component) => {
 	const Wrapper = (props) => {
-		const history = useNavigate();
+    const history = useNavigate();
+    
 		return <Component history={history} {...props} />;
 	};
 	return Wrapper;
 };
 
 const mapStateToProps = state => {
+  // console.log("mapState", state);
   return {
     dishes: state.dishes,
     comments: state.comments,
@@ -69,10 +71,15 @@ const mapStateToProps = state => {
   };
 };
 
+
+//here actions passed into the component
 const mapDispatchToProps = (dispatch) => ({
   addComment: (dishId, rating, author, comment) => 
     dispatch(addComment(dishId, rating, author, comment)), //here is an imported action creator for Comment to change our app state 
-  fetchDishes: () => {dispatch(fetchDishes())} //pass our ActionCreator of fetchDishes into the props of main component
+  fetchDishes: () => {dispatch(fetchDishes())}, //pass our ActionCreator of fetchDishes into the props of main component
+  fetchPromos: () => {dispatch(fetchPromos())}, //pass our ActionCreator of fetchDishes into the props of main component
+  fetchComments: () => {dispatch(fetchComments())}, //pass our ActionCreator of fetchDishes into the props of main component
+  resetFeedbackForm: () => { dispatch(actions.reset('feedback'))} //Form model name inside component???
 });
 
 
@@ -99,6 +106,8 @@ class Main extends React.Component {
 
   componentDidMount() {
     this.props.fetchDishes();
+    this.props.fetchComments();
+    this.props.fetchPromos();
   }
 
   render() {
@@ -108,9 +117,11 @@ class Main extends React.Component {
         return(
             <Home 
               dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
-              dishesLoadind={this.props.dishes.isLoading}
+              dishesLoading={this.props.dishes.isLoading}
               dishesErrMsg={this.props.dishes.errmsg}
-              promotion={this.props.promotions.filter((promo) => promo.featured)[0]}
+              promotion={this.props.promotions.promotions.filter((promo) => promo.featured)[0]}
+              promosLoading={this.props.promotions.isLoading}
+              promosErrMsg={this.props.promotions.errmsg}
               leader={this.props.leaders.filter((leader) => leader.featured)[0]}
             />
         );
@@ -126,7 +137,8 @@ class Main extends React.Component {
             }
             isLoading={this.props.dishes.isLoading}
             errmsg={this.props.dishes.errmsg}
-            comments={this.props.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10))}
+            comments={this.props.comments.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10))}
+            commensterrmsg={this.props.comments.errmsg}
             addComment={this.props.addComment}
           />
         );
@@ -149,7 +161,7 @@ class Main extends React.Component {
               <Route path='menu' element={<Menu dishes={this.props.dishes}/>} />
                  {/*using arrayfunc for props passing*/}
               <Route path="menu/:dishId" element={<DishWithId />} />
-              <Route path='contactus' element={ <Contact />} />
+              <Route path='contactus' element={ <Contact resetFeedbackForm={this.props.resetFeedbackForm}/>} />
               <Route path="*" element={<HomePage />} />
             </Route>
             

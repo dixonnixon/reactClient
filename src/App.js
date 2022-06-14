@@ -13,7 +13,6 @@ import  { configureStore } from './redux/configureStore'
 
 const store = configureStore();
 
-
 class App extends React.Component {
   
   render() {
@@ -31,5 +30,6 @@ class App extends React.Component {
   }
   
 }
+
 
 export default App;

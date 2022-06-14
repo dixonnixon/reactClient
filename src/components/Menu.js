@@ -2,6 +2,8 @@ import React from "react";
 import { Card, Breadcrumb } from 'react-bootstrap';
 import {Link, Outlet } from 'react-router-dom';
 import { Loading } from "./Loading";
+
+import { baseUrl } from "../shared/baseUrl";
 // import Image  from 'react-bootstrap/Image';
 // import ListGroup  from 'react-bootstrap/ListGroup';
 // import DishDetail from './DishDetail';
@@ -22,7 +24,7 @@ function RenderMenuItem({dish, onClick}) {
     // <Card onClick={() => onClick(dish.id)}>
     <Card >
         <Link to={`/menu/${dish.id}`} key={dish.id}>
-        <Card.Img width="100%" variant="right" src={dish.image} alt={dish.name} />
+        <Card.Img width="100%" variant="right" src={baseUrl + dish.image} alt={dish.name} />
         <Card.ImgOverlay>
             <Card.Title>{dish.name}</Card.Title>
         </Card.ImgOverlay>

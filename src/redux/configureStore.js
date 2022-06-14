@@ -1,11 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { configureStore as cs } from '@reduxjs/toolkit'
+import { createForms } from 'react-redux-form';
 import { Dishes } from './dishes';
 import { Comments } from './comments';
 import { Leaders } from './leaders';
 import { Promotions } from './promotions';
-import { combineReducers, createStore, applyMiddleware } from 'redux';
+import { combineReducers,  applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
+import { InitialFeedback } from './forms';
+
+import { print1 } from '../addons/middleware'
+
 
 // import { Reducer, initialState } from './reducer';
 
@@ -21,28 +26,40 @@ import logger from 'redux-logger';
 // export default configureStore({
 //     reducer: Reducer
 // });
-export  const configureStore = () => {
-//    const store = createStore(Reducer, initialState);
-   const store = createStore(
-       combineReducers({
-           dishes: Dishes,
-           comments: Comments,
-           leaders: Leaders,
-           promotions: Promotions
-       }),
-       applyMiddleware(thunk, logger) //allow our store to use middleware
-   );
+// export  const configureStore = () => {
+// //    const store = createStore(Reducer, initialState);
 
-   return store;
-};
+//     /**
+//      * inside each of the reducers it should not be any async logic, random calcs and side effects?
+//      * only state, actions and new state if necessary
+//      */
+//    const store = createStore(
+//        combineReducers({
+//            dishes: Dishes,
+//            comments: Comments,
+//            leaders: Leaders,
+//            promotions: Promotions,
+//            ...createForms({
+//                 feedback: InitialFeedback
+//            })
+//        }),
+//        applyMiddleware(thunk, logger) //allow our store to use middleware
+//    );
 
-// export  const ConfigureStore = () => {
-//     const store = configureStore(
-//         combineReducers({
-//             dishes: Dishes,
-//             comments: Comments 
-//         })
-//     );
-
-//     return store;
+//    return store;
 // };
+
+export  const configureStore = () => {
+    const store = cs({
+        reducer: combineReducers({
+            dishes: Dishes,
+            comments: Comments,
+            leaders: Leaders,
+            promotions: Promotions,
+            ...createForms({
+                    feedback: InitialFeedback
+            })
+        })
+    },  applyMiddleware(thunk, logger, print1));
+    return store;
+};

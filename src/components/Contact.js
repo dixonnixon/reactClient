@@ -1,8 +1,9 @@
 /* eslint-disable react/jsx-pascal-case */
 import React from 'react';
-import {Breadcrumb, Form, Col,  Row, Button} from 'react-bootstrap';
+import {Breadcrumb,  Form as F,  Col,  Row, Button} from 'react-bootstrap';
 import  { Link } from 'react-router-dom';
-import { Control, LocalForm, Errors } from 'react-redux-form';
+// import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Control, Form, Errors, actions } from 'react-redux-form';
 
 const required = (val) => val && val.length,
     maxLength = (len) => (val) =>!(val) || (val.length <= len),
@@ -20,7 +21,8 @@ class Contact extends React.Component  {
     }
 
     handleSubmit(values) {
-        console.log(values);
+        console.log("handleSubmitvalues:", values);
+        this.props.resetFeedbackForm();
     }
 
     render() {
@@ -68,9 +70,9 @@ class Contact extends React.Component  {
                     <h3>Send Us a feedback</h3>
                 </div>
                 <div className="col-12 col-md-9">
-                    <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                    <Form model="feedback" onSubmit={(values) => this.handleSubmit(values)}>
                         <Row className="form-group mb-3">
-                            <Form.Label htmlFor="firstname" md={2} column sm="2">First Name</Form.Label>
+                            <F.Label htmlFor="firstname" md={2} column sm="2">First Name</F.Label>
                             <Col md={10}>
                                 <Control.text model=".firstname"  placeholder="Enter your name here" id="firstname"
                                     name="firstname"
@@ -93,7 +95,7 @@ class Contact extends React.Component  {
                             </Col>
                         </Row>
                         <Row className="form-group mb-3">
-                            <Form.Label htmlFor="lastname" md={2} column sm="2">Last Name</Form.Label>
+                            <F.Label htmlFor="lastname" md={2} column sm="2">Last Name</F.Label>
                             <Col md={10}>
                                 <Control.text model=".lastname" placeholder="Enter your last name here" id="lastname"
                                     name="lastname"
@@ -116,7 +118,7 @@ class Contact extends React.Component  {
                             </Col>
                         </Row>
                         <Row className="form-group mb-3">
-                            <Form.Label htmlFor="telnum" md={2} column sm="2">Tel.</Form.Label>
+                            <F.Label htmlFor="telnum" md={2} column sm="2">Tel.</F.Label>
                             <Col md={10}>
                                 <Control.text model=".telnum" placeholder="Enter your cellphone number here" id="telnum"
                                     name="telnum"
@@ -141,7 +143,7 @@ class Contact extends React.Component  {
                             </Col>
                         </Row>
                         <Row className="form-group mb-3">
-                            <Form.Label htmlFor="email" md={2} column sm="2">email</Form.Label>
+                            <F.Label htmlFor="email" md={2} column sm="2">email</F.Label>
                             <Col md={10}>
                                 <Control.text model=".email" placeholder="Enter your email here" id="email"
                                     name="email"
@@ -170,7 +172,7 @@ class Contact extends React.Component  {
                                         className='form-check-input'
                                         id='agree' name='agree'
                                     />
-                                    <Form.Check.Label><b>May we contact you?</b></Form.Check.Label>
+                                    <F.Check.Label><b>May we contact you?</b></F.Check.Label>
                                 </div>
                             </Col>
                             <Col md={{size: 3, offset: 1}}>
@@ -186,7 +188,7 @@ class Contact extends React.Component  {
                             </Col>
                         </Row>
                         <Row className="form-group mb-3">
-                            <Form.Label htmlFor="message" md={2} column sm="2">Your feedback</Form.Label>
+                            <F.Label htmlFor="message" md={2} column sm="2">Your feedback</F.Label>
                             <Col md={10}>
                                 <Control.textarea model=".message" 
                                     placeholder="Enter your feedback here" 
@@ -202,7 +204,7 @@ class Contact extends React.Component  {
                                 <Button type="submit" color="primary">Share</Button>
                             </Col>
                         </Row>
-                    </LocalForm>
+                    </Form>
                 </div>
             </div>
         </div>
