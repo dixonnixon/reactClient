@@ -23,6 +23,7 @@ import { connect } from 'react-redux';
 // import { addComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators'; //actionCrator 
 import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators'; //actionCrator 
 import { actions } from 'react-redux-form';
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 //so wee need a state container to manage itself through a bunch of independent or related
 //components *REDUX<-Flux, Elm, ImmutableJs
@@ -150,24 +151,30 @@ class Main extends React.Component {
           <About leaders={this.props.leaders} />
         );
       };
-    
+    const currentKey = window.location.pathname.split('/')[1] || '/'
     return (
       <div >
         
         <Header />
-        <Routes>
-            <Route path="/"  >
-              <Route path="home" element={<HomePage />}/>
-              <Route path="aboutus" element={<AboutPage />}/>
-              <Route path='menu' element={<Menu dishes={this.props.dishes}/>} />
-                 {/*using arrayfunc for props passing*/}
-              <Route path="menu/:dishId" element={<DishWithId />} />
-              <Route path='contactus' element={ <Contact resetFeedbackForm={this.props.resetFeedbackForm}/>} />
-              <Route path="*" element={<HomePage />} />
-            </Route>
+        <TransitionGroup  >
+          <CSSTransition key={currentKey} classNames="page"
+            timeout={400} appear>
+        
+          <Routes>
+              <Route path="/"  >
+                <Route path="home" element={<HomePage />}/>
+                <Route path="aboutus" element={<AboutPage />}/>
+                <Route path='menu' element={<Menu dishes={this.props.dishes}/>} />
+                  {/*using arrayfunc for props passing*/}
+                <Route path="menu/:dishId" element={<DishWithId />} />
+                <Route path='contactus' element={ <Contact resetFeedbackForm={this.props.resetFeedbackForm}/>} />
+                <Route path="*" element={<HomePage />} />
+              </Route>
+              
             
-           
-        </Routes>
+          </Routes>
+          </CSSTransition>
+        </TransitionGroup>
         {/* <Menu 
             dishes={this.props.dishes} 
             onClick={(dishId) => this.handleSelectDish(dishId)}

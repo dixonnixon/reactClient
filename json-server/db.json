@@ -247,6 +247,14 @@
       "comment": "grrg",
       "date": "2022-06-14T13:32:15.083Z",
       "id": 30
+    },
+    {
+      "dishId": 1,
+      "rating": "5",
+      "author": "6767",
+      "comment": "67",
+      "date": "2022-06-14T14:50:27.941Z",
+      "id": 31
     }
   ],
   "promotions": [
