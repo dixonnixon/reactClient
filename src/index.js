@@ -7,7 +7,7 @@ import 'bootstrap-social/bootstrap-social.css';
 
 import './index.css';
 import App from './App';
-import ThemeSwitcher from './ThemeSwitcher';
+// import ThemeSwitcher from './ThemeSwitcher';
 
 import reportWebVitals from './reportWebVitals';
 

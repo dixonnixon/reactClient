@@ -3,7 +3,7 @@ import React from 'react';
 import {Breadcrumb,  Form as F,  Col,  Row, Button} from 'react-bootstrap';
 import  { Link } from 'react-router-dom';
 // import { Control, LocalForm, Errors } from 'react-redux-form';
-import { Control, Form, Errors, actions } from 'react-redux-form';
+import { Control, Form, Errors } from 'react-redux-form';
 
 const required = (val) => val && val.length,
     maxLength = (len) => (val) =>!(val) || (val.length <= len),
@@ -22,6 +22,7 @@ class Contact extends React.Component  {
 
     handleSubmit(values) {
         console.log("handleSubmitvalues:", values);
+        this.props.postFeedback(values);
         this.props.resetFeedbackForm();
     }
 

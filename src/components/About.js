@@ -1,6 +1,10 @@
 import React from 'react';
 import { Breadcrumb, Card, ListGroup } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
+import { baseUrl } from "../shared/baseUrl";
+
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
+
 
 const styles={
     cardStyle:{
@@ -17,13 +21,23 @@ const styles={
 }
 function RenderLeader({leader}) {
     console.log(leader);
+
+    let sign = "";
+    if(leader.id % 2 === 0) {
+        sign = "+";
+    } else sign = "-";
+
     return (
+        <FadeTransform in transformProps={{
+            exitTransform: 'scale(1) translateY(' + sign +'50%)'
+            }}
+        >
         <Card style={styles.cardStyle}>
             <Card.Header style={styles.cardHeaderStyle}  className="bg-primary text-white">
                 <Card.Img 
                     className="ms-2"
                     variant="left" 
-                    src={leader.image} 
+                    src={baseUrl + leader.image} 
                 />
                 {leader.name}
             </Card.Header>
@@ -36,17 +50,21 @@ function RenderLeader({leader}) {
                 </Card.Text>
             </Card.Body>
         </Card>
+        </FadeTransform>
     );
 }
 
 function About(props) {
     const leaders = props.leaders.map((leader) => {
         return (
-            <ListGroup.Item key={leader.id}>
-                   
+            <Fade in key={leader.id}>
+            <ListGroup.Item >
+                <Stagger in>
             <p>Leader {leader.name}</p>
             <RenderLeader leader={leader}/>
+                </Stagger>
             </ListGroup.Item>
+            </Fade>
         );
     });
     return (
@@ -65,7 +83,7 @@ function About(props) {
             <div className='row row-content'>
                 <div className='col-12 col-md-6'>
                     <h2>Our History</h2>
-                        <p>Started in 2010, Ristorante con Fusion quickly established itself as a culinary icon par excellence in Hong Kong. With its unique brand of world fusion cuisine that can be found nowhere else, it enjoys patronage from the A-list clientele in Hong Kong.  Featuring four of the best three-star Michelin chefs in the world, you never know what will arrive on your plate the next time you visit us.</p>
+                        <p>Started in 2010, Restoran con Fusion quickly established itself as a culinary icon par excellence in Hong Kong. With its unique brand of world fusion cuisine that can be found nowhere else, it enjoys patronage from the A-list clientele in Hong Kong.  Featuring four of the best three-star Michelin chefs in the world, you never know what will arrive on your plate the next time you visit us.</p>
                         <p>The restaurant traces its humble beginnings to <em>The Frying Pan</em>, a successful chain started by our CEO, Mr. Peter Pan, that featured for the first time the world's best cuisines in a pan.</p>
                     
                 </div>
@@ -107,7 +125,9 @@ function About(props) {
                 </div>
                 <div className="col-12">
                     <ListGroup >
+                    <Stagger in>
                             {leaders}
+                            </Stagger>
                     </ListGroup>
                     {/* <Media list>
                         {leaders}

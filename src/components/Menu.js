@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Breadcrumb } from 'react-bootstrap';
-import {Link, Outlet } from 'react-router-dom';
+import {Link } from 'react-router-dom';
 import { Loading } from "./Loading";
 
 import { baseUrl } from "../shared/baseUrl";
@@ -19,7 +19,7 @@ import { baseUrl } from "../shared/baseUrl";
     // }
 
     // render() {
-function RenderMenuItem({dish, onClick}) {
+function RenderMenuItem({dish}) {
   return (
     // <Card onClick={() => onClick(dish.id)}>
     <Card >

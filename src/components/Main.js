@@ -17,11 +17,11 @@ import About from './About';
 // import { LEADERS } from '../shared/leaders'
 
 import React from 'react';
-import { Routes, Route, Navigate, useParams, useNavigate  } from 'react-router-dom';
+import { Routes, Route,  useParams, useNavigate  } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 // import { addComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators'; //actionCrator 
-import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators'; //actionCrator 
+import { postComment, fetchDishes, fetchComments, fetchPromos, fetchLeaders, postFeedback} from '../redux/ActionCreators'; //actionCrator 
 import { actions } from 'react-redux-form';
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
@@ -78,8 +78,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => ({
   postComment: (dishId, rating, author, comment) => 
     dispatch(postComment(dishId, rating, author, comment)), //here is an imported action creator for Comment to change our app state 
+  postFeedback: (feedback) =>  
+    dispatch(postFeedback(feedback)), //here is an imported action creator for Comment to change our app state 
   fetchDishes: () => {dispatch(fetchDishes())}, //pass our ActionCreator of fetchDishes into the props of main component
   fetchPromos: () => {dispatch(fetchPromos())}, //pass our ActionCreator of fetchDishes into the props of main component
+  fetchLeaders: () => {dispatch(fetchLeaders())}, //pass our ActionCreator of fetchDishes into the props of main component
   fetchComments: () => {dispatch(fetchComments())}, //pass our ActionCreator of fetchDishes into the props of main component
   resetFeedbackForm: () => { dispatch(actions.reset('feedback'))} //Form model name inside component???
 });
@@ -87,17 +90,17 @@ const mapDispatchToProps = (dispatch) => ({
 
 class Main extends React.Component {
 
-  constructor(props) {
-    super(props);
+  // constructor(props) {
+  //   super(props);
 
-    // this.props = {
-      // dishes: DISHES,
-      // comments: COMMENTS,
-      // promotions: PROMOTIONS,
-      // leaders: LEADERS,
-      // selectedDish: null
-    // };
-  }
+  //   // this.props = {
+  //     // dishes: DISHES,
+  //     // comments: COMMENTS,
+  //     // promotions: PROMOTIONS,
+  //     // leaders: LEADERS,
+  //     // selectedDish: null
+  //   // };
+  // }
 
   // handleSelectDish(dishId) {
   //   console.log(dishId);
@@ -110,11 +113,17 @@ class Main extends React.Component {
     this.props.fetchDishes();
     this.props.fetchComments();
     this.props.fetchPromos();
+    this.props.fetchLeaders();
   }
 
   render() {
       
-      console.log("render MAin", this.props, this.props.selectedDish, this.props.dishes.dishes.filter((dish) => dish.id === this.props.selectedDish)[0]);
+      console.log("render MAin", this.props, this.props.selectedDish, this.props.dishes.dishes.filter((dish) => dish.id === this.props.selectedDish)[0],
+      
+      // this.props.leaders.leaders.filter(function (leader)  { 
+      //   console.log(leader);
+      //  })[0]
+       );
       const HomePage = () => {
         return(
             <Home 
@@ -124,7 +133,9 @@ class Main extends React.Component {
               promotion={this.props.promotions.promotions.filter((promo) => promo.featured)[0]}
               promosLoading={this.props.promotions.isLoading}
               promosErrMsg={this.props.promotions.errmsg}
-              leader={this.props.leaders.filter((leader) => leader.featured)[0]}
+              leader={this.props.leaders.leaders.filter((leader) => leader.featured)[0]}
+              leaderLoading={this.props.leaders.isLoading}
+              leaderErrMsg={this.props.leaders.errmsg}
             />
         );
       }
@@ -147,8 +158,9 @@ class Main extends React.Component {
       };
 
       const AboutPage = () => {
+        console.log("AboutPage", this.props);
         return (
-          <About leaders={this.props.leaders} />
+          <About leaders={this.props.leaders.leaders} />
         );
       };
     const currentKey = window.location.pathname.split('/')[1] || '/'
@@ -167,7 +179,10 @@ class Main extends React.Component {
                 <Route path='menu' element={<Menu dishes={this.props.dishes}/>} />
                   {/*using arrayfunc for props passing*/}
                 <Route path="menu/:dishId" element={<DishWithId />} />
-                <Route path='contactus' element={ <Contact resetFeedbackForm={this.props.resetFeedbackForm}/>} />
+                <Route path='contactus' 
+                  element={ <Contact resetFeedbackForm={this.props.resetFeedbackForm} postFeedback={this.props.postFeedback}/>} 
+                
+                />
                 <Route path="*" element={<HomePage />} />
               </Route>
               

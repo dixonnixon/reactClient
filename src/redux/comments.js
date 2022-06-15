@@ -16,6 +16,13 @@ export const Comments = (state = {
                errmsg: action.payload,
                comments: [] 
             };
+        case ActionTypes.COMMENTS_LOADING:
+            return {
+                ...state,
+               isLoading: true,
+               errmsg: null,
+               comments: [] 
+            };
         case ActionTypes.ADD_COMMENTS:
             return {
                 ...state,
