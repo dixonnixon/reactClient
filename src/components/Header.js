@@ -7,6 +7,8 @@ import { Link, Outlet } from "react-router-dom";
 
 // }
 
+
+
 export default class Header extends React.Component {
     constructor(props) {
         super(props);
@@ -79,7 +81,7 @@ export default class Header extends React.Component {
                                         <span className='fa fa-sign-in fa-lg'>Login</span></Button>
                                 </Nav.Item>
                             </Nav>
-                            <Outlet />
+                            {/* <Outlet /> */}
                     </Navbar.Collapse>
                 </div>
                 </Navbar>

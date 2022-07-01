@@ -5,6 +5,7 @@ import { baseUrl } from "../shared/baseUrl";
 
 import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
+import AutoFocusTextInput from './AutoFocusTextInput';
 
 const styles={
     cardStyle:{
@@ -50,7 +51,7 @@ function RenderLeader({leader}) {
                 </Card.Text>
             </Card.Body>
         </Card>
-        </FadeTransform>
+         </FadeTransform>
     );
 }
 
@@ -58,17 +59,18 @@ function About(props) {
     const leaders = props.leaders.map((leader) => {
         return (
             <Fade in key={leader.id}>
-            <ListGroup.Item >
-                <Stagger in>
+            <ListGroup.Item key={leader.id}>
+                
             <p>Leader {leader.name}</p>
             <RenderLeader leader={leader}/>
-                </Stagger>
+                
             </ListGroup.Item>
-            </Fade>
+             </Fade>
         );
     });
     return (
         <div className='container'>
+            <AutoFocusTextInput />
             <div className="row">
                 <Breadcrumb>
                 {/* <Breadcrumb.Item><Link to="/home">Home</Link></Breadcrumb.Item> */}
@@ -127,7 +129,7 @@ function About(props) {
                     <ListGroup >
                     <Stagger in>
                             {leaders}
-                            </Stagger>
+                    </Stagger>
                     </ListGroup>
                     {/* <Media list>
                         {leaders}

@@ -57,6 +57,7 @@
   "author": "dixonnixon <drenb@ukr.net>",
   "license": "MIT",
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.18.2"
+    "@babel/plugin-proposal-decorators": "^7.18.2",
+    "jest-watch-typeahead": "^0.6.5"
   }
 }

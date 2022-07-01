@@ -7,7 +7,7 @@ export const Comments = (state = {
     errmsg: null,
     comments: []
 }, action) => {
-    console.log("CommentsReducer", state, action);
+    // console.log("CommentsReducer", state, action);
     switch(action.type) {
         case ActionTypes.COMMENTS_FAILED:
             return {
