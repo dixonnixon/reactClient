@@ -4,10 +4,14 @@ import { Dishes } from './dishes';
 import { Comments } from './comments';
 import { Leaders } from './leaders';
 import { Promotions } from './promotions';
+import { Auth } from './auth';
+import { favorites } from './favorites';
+
+
 import { combineReducers,  applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
-import { InitialFeedback } from './forms';
+import { InitialFeedback, InitialLogin } from './forms';
 
 import { print1 } from '../addons/middleware'
 
@@ -56,8 +60,13 @@ export  const configureStore = () => {
             comments: Comments,
             leaders: Leaders,
             promotions: Promotions,
+            auth: Auth,
+            favorites,
+
+
             ...createForms({
-                    feedback: InitialFeedback
+                    feedback: InitialFeedback,
+                    login: InitialLogin
             })
         })
     },  applyMiddleware(thunk, logger, print1));

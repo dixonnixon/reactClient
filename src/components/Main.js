@@ -9,6 +9,8 @@ import Footer from './Footer';
 import Home from './Home';
 import Contact from './Contact';
 import About from './About';
+import Favorites from './Favorite';
+
 
 
 // import { DISHES } from '../shared/dishes'
@@ -16,14 +18,19 @@ import About from './About';
 // import { PROMOTIONS } from '../shared/promotions'
 // import { LEADERS } from '../shared/leaders'
 
-import React from 'react';
-import { Routes, Route,  useParams, useNavigate  } from 'react-router-dom';
+import React, { Component } from 'react';
+import { Routes, Route,  useParams, useNavigate, Navigate, Outlet  } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 // import { addComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators'; //actionCrator 
-import { postComment, fetchDishes, fetchComments, fetchPromos, fetchLeaders, postFeedback} from '../redux/ActionCreators'; //actionCrator 
+import { postComment,  fetchComments, fetchPromos, 
+  fetchLeaders, postFeedback, fetchDishes,
+  fetchFavorites, postFavorite,
+  loginUser, logoutUser, deleteFavorite
+} from '../redux/ActionCreators'; //actionCrator 
 import { actions } from 'react-redux-form';
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
+import { Nav } from 'react-bootstrap';
 
 //so wee need a state container to manage itself through a bunch of independent or related
 //components *REDUX<-Flux, Elm, ImmutableJs
@@ -69,22 +76,32 @@ const mapStateToProps = state => {
     dishes: state.dishes,
     comments: state.comments,
     promotions: state.promotions,
-    leaders: state.leaders
+    leaders: state.leaders,
+    favorites: state.favorites,
+    auth: state.auth
   };
 };
 
 
 //here actions passed into the component
 const mapDispatchToProps = (dispatch) => ({
-  postComment: (dishId, rating, author, comment) => 
-    dispatch(postComment(dishId, rating, author, comment)), //here is an imported action creator for Comment to change our app state 
-  postFeedback: (feedback) =>  
-    dispatch(postFeedback(feedback)), //here is an imported action creator for Comment to change our app state 
+  postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment)), //here is an imported action creator for Comment to change our app state 
+  postFeedback: (feedback) => dispatch(postFeedback(feedback)), //here is an imported action creator for Comment to change our app state 
   fetchDishes: () => {dispatch(fetchDishes())}, //pass our ActionCreator of fetchDishes into the props of main component
   fetchPromos: () => {dispatch(fetchPromos())}, //pass our ActionCreator of fetchDishes into the props of main component
   fetchLeaders: () => {dispatch(fetchLeaders())}, //pass our ActionCreator of fetchDishes into the props of main component
   fetchComments: () => {dispatch(fetchComments())}, //pass our ActionCreator of fetchDishes into the props of main component
-  resetFeedbackForm: () => { dispatch(actions.reset('feedback'))} //Form model name inside component???
+  resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
+  loginUser: (credentials) => dispatch(loginUser(credentials)),
+  logoutUser: () => dispatch(logoutUser()),
+  deleteFavorite: (dishId) => dispatch(deleteFavorite(dishId)),
+  fetchFavorites: () => dispatch(fetchFavorites()),
+  postFavorite: (dishId) => dispatch(postFavorite(dishId)),
+
+
+  // fetchFavorites: () => dispatch(fetchFavorites()),
+
+  //Form model name inside component???
 });
 
 
@@ -114,15 +131,15 @@ class Main extends React.Component {
     this.props.fetchComments();
     this.props.fetchPromos();
     this.props.fetchLeaders();
+    this.props.fetchFavorites();
+
   }
 
   render() {
       
-      console.log("render MAin", this.props, this.props.selectedDish, this.props.dishes.dishes.filter((dish) => dish.id === this.props.selectedDish)[0],
-      
-      // this.props.leaders.leaders.filter(function (leader)  { 
-      //   console.log(leader);
-      //  })[0]
+      console.log("render MAin", this.props, 
+        this.props.dishes.dishes, this.props.dishes.leaders,
+        this.props.dishes.dishes.filter((dish) => dish.featured)[0]
        );
       const HomePage = () => {
         return(
@@ -142,43 +159,83 @@ class Main extends React.Component {
       
       const DishWithId = () => {
         let params = useParams();
-        // console.log("Match", match, params, this.props.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10)));
+        console.log("Match",  params, this.props,
+          this.props.favorites,
+         );
         return (
-          <DishDetail 
-            dish={this.props.dishes.dishes
-                .filter((dish) => dish.id === parseInt(params.dishId, 10))[0]
-            }
-            isLoading={this.props.dishes.isLoading}
-            errmsg={this.props.dishes.errmsg}
-            comments={this.props.comments.comments.filter((comment) => comment.dishId === parseInt(params.dishId, 10))}
-            commensterrmsg={this.props.comments.errmsg}
-            postComment={this.props.postComment}
+          this.props.auth.isAuthenticated
+        ?
+        <DishDetail dish={this.props.dishes.dishes.filter((dish) => dish._id === params.dishId)[0]}
+          isLoading={this.props.dishes.isLoading}
+          errMess={this.props.dishes.errMess}
+          comments={this.props.comments.comments.filter((comment) => comment.dish === params.dishId)}
+          commentsErrMess={this.props.comments.errMess}
+          postComment={this.props.postComment}
+          // favorite={this.props.favorites.favorites.dishes.some((dish) => dish._id === params.dishId)}
+          postFavorite={this.props.postFavorite}
+          />
+        :
+        <DishDetail dish={this.props.dishes.dishes.filter((dish) => dish._id === params.dishId)[0]}
+          isLoading={this.props.dishes.isLoading}
+          errMess={this.props.dishes.errMess}
+          comments={this.props.comments.comments.filter((comment) => comment.dish === params.dishId)}
+          commentsErrMess={this.props.comments.errMess}
+          postComment={this.props.postComment}
+          favorite={false}
+          postFavorite={this.props.postFavorite}
           />
         );
       };
 
-      const AboutPage = () => {
-        console.log("AboutPage", this.props);
-        return (
-          <About leaders={this.props.leaders.leaders} />
-        );
+      // const PrivateRoute = ({
+      //   component: Component,
+      //   ...rest
+      // }) => (
+      //   <Route {...rest} render={(props) => (
+      //       this.props.auth.isAuthenticated
+      //       ? <Component {...props} />
+      //       : <Navigate to='/home' />
+      //   )}    />
+      // );
+      const PrivateRoute = () => {
+        console.log("Private", this.props.auth);
+        const auth = this.props.auth.isAuthenticated; // determine if authorized, from context or however you're doing it
+        // If authorized, return an outlet that will render child elements
+        // If not, return element that will navigate to login page
+        return auth ? <Outlet /> : <Navigate to="/users/login" />;
       };
-    const currentKey = window.location.pathname.split('/')[1] || '/'
+
+    const AboutPage = () => {
+      console.log("AboutPage", this.props);
+      return (
+        <About leaders={this.props.leaders.leaders} />
+      );
+    };
+    const currentKey = window.location.pathname.split('/')[1] || '/';
+    
     return (
       <div >
         
-        <Header />
+        <Header 
+          auth={this.props.auth}
+          loginUser={this.props.loginUser}
+          logoutUser={this.props.logoutUser} 
+        />
         <TransitionGroup  >
           <CSSTransition key={currentKey} classNames="page"
             timeout={400} appear>
         
           <Routes>
-              <Route path="/"  >
+              <Route path="/" >
                 <Route path="home" element={<HomePage />}/>
                 <Route path="aboutus" element={<AboutPage />}/>
                 <Route path='menu' element={<Menu dishes={this.props.dishes}/>} />
                   {/*using arrayfunc for props passing*/}
                 <Route path="menu/:dishId" element={<DishWithId />} />
+                <Route exact element={<PrivateRoute/>}>
+                  <Route  path="/favorites" element={<Favorites favorites={this.props.favorites} deleteFavorite={this.props.deleteFavorite} />}/>
+                </Route>
+
                 <Route path='contactus' 
                   element={ <Contact resetFeedbackForm={this.props.resetFeedbackForm} postFeedback={this.props.postFeedback}/>} 
                 

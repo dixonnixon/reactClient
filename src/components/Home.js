@@ -6,7 +6,7 @@ import { FadeTransform } from 'react-animation-components';
 
 // function RenderCard({item}) {
 function RenderCard({item, isLoading, errmsg}) {
-  console.log("Card", item);
+  console.log("Card", item, );
   if(isLoading) {
     return (
       <Loading />
@@ -17,7 +17,7 @@ function RenderCard({item, isLoading, errmsg}) {
       <h4>{errmsg}</h4>
     );
   }
-  else
+  else if(item) {
     return (
       <FadeTransform in
         transformProps={{
@@ -35,6 +35,11 @@ function RenderCard({item, isLoading, errmsg}) {
       </Card>
       </FadeTransform>
     );
+  }
+  else {
+    return (<div></div>);
+  }
+    
 }
 
 function Home(props) {

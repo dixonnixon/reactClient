@@ -126,8 +126,7 @@ class Contact extends React.Component  {
                                     className='form-control'
                                     validators={{
                                         required, minLength: minLength(3),
-                                        maxLength: maxLength(15),
-                                        isNumber
+                                        maxLength: maxLength(15)
                                     }}
                                 />
                                 <Errors 

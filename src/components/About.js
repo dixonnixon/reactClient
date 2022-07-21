@@ -56,10 +56,11 @@ function RenderLeader({leader}) {
 }
 
 function About(props) {
-    const leaders = props.leaders.map((leader) => {
+    const leaders = props.leaders.map((leader, index) => {
+        console.log(leader, index);
         return (
-            <Fade in key={leader.id}>
-            <ListGroup.Item key={leader.id}>
+            <Fade in key={index}>
+            <ListGroup.Item key={index}>
                 
             <p>Leader {leader.name}</p>
             <RenderLeader leader={leader}/>

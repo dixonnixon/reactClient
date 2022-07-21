@@ -22,8 +22,9 @@ import { baseUrl } from "../shared/baseUrl";
 function RenderMenuItem({dish}) {
   return (
     // <Card onClick={() => onClick(dish.id)}>
-    <Card >
-        <Link to={`/menu/${dish.id}`} key={dish.id}>
+    
+    <Card key={dish._id}>
+        <Link to={`/menu/${dish._id}`}>
         <Card.Img width="100%" variant="right" src={baseUrl + dish.image} alt={dish.name} />
         <Card.ImgOverlay>
             <Card.Title>{dish.name}</Card.Title>
@@ -34,19 +35,19 @@ function RenderMenuItem({dish}) {
 }
 
 const Menu = (props) => {
-  console.log("RenderMenu invoked");
+  console.log("RenderMenu invoked", props);
   const menu = props.dishes.dishes.map((dish) => {
     console.log("Menu dish", dish);
       return (
-        <div key={dish.id} className="col-12 col-md-5 m-1">
-           {/* <Card onClick={() => this.handleSelectDish(dish)}> */}
-           
-          {/* <DishDetail overlay="true" dish={dish} 
-            onClick={() => this.props.onClick(dish.id)}
-          /> */}
-          {/* <RenderMenuItem dish={dish} onClick={props.onClick}/> */}
-          <RenderMenuItem dish={dish} />
-        </div>
+         <div key={dish._id} className="col-12 col-md-5 m-1">
+            {/* <Card onClick={() => this.handleSelectDish(dish)}> */}
+         
+           {/* <DishDetail overlay="true" dish={dish} 
+             onClick={() => this.props.onClick(dish.id)}
+           /> */}
+           {/* <RenderMenuItem dish={dish} onClick={props.onClick}/> */}
+           <RenderMenuItem key={dish._id} dish={dish} />
+         </div>
              
       );
 
@@ -73,28 +74,31 @@ const Menu = (props) => {
   else
     return (
         <div className="container">
-        <div className="row">
-          <Breadcrumb>
-            {/* <Breadcrumb.Item><Link to="/home">Home</Link></Breadcrumb.Item> */}
-            <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/home"}}>Home</Breadcrumb.Item>
-            <Breadcrumb.Item active>Menu</Breadcrumb.Item>
-          </Breadcrumb>
-          <div className="col-sm-12">
-            <h3>Menu</h3>
-            <hr />
-          </div>
-        </div>
-        <div className="row">
+          <div  className="row">
+            <div className="col-sm-12">
+              <Breadcrumb>
+                {/* <Breadcrumb.Item href="/home">Home */}
+                {/* <Link to="/home">Home</Link> */}
+                {/* </Breadcrumb.Item>  */}
+                <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/home"}}>Home</Breadcrumb.Item>
+                <Breadcrumb.Item  active>Menu</Breadcrumb.Item>
+              </Breadcrumb>
+            </div>
+            <div className="col-sm-12">
+              <h3>Menu</h3>
+              <hr />
               {menu}
-        </div>
-        {/* <div className="row">
-              {/* {this.renderDish(this.state.selectedDish)} 
+            </div>
+          </div>
+          
+          
+          {/* <div className="row">
+               {this.renderDish(this.state.selectedDish)} 
             <DishDetail 
               dish={this.state.selectedDish}
               onClick={() => this.props.onClick(dish.id)}
-            />
-        </div> */}
-      </div>
+            />*/}
+        </div> 
     );
 };
 

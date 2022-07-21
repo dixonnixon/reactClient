@@ -8,3 +8,9 @@ export const InitialFeedback = {
     contactType: 'Tel.',
     message: ''
 };
+
+export const InitialLogin = {
+    username: '',
+    password: '',
+    rememberme: true,
+};

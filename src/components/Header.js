@@ -1,6 +1,15 @@
 import React from 'react';
-import { Navbar, Nav,  Modal, Button, Form  } from 'react-bootstrap';
-import { Link, Outlet } from "react-router-dom";
+import { Navbar, Nav,  Modal, Row, Button, Form as F  } from 'react-bootstrap';
+import { Link, Outlet, Navigate  } from "react-router-dom";
+import { Control, Form, Errors } from "react-redux-form";
+
+
+const required = (val) => val && val.length,
+    maxLength = (len) => (val) =>!(val) || (val.length <= len),
+    minLength = (len) => (val) => (val) && (val.length >= len),
+    isNumber = (val) => !isNaN(Number(val)),
+    validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
+
 
 // function Example() {
 //     const [show, setShow] = useState(false);
@@ -13,19 +22,38 @@ export default class Header extends React.Component {
     constructor(props) {
         super(props);
 
-
-
         this.toggleNav = this.toggleNav.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
-        this.handleLogin = this.handleLogin.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleLogout = this.handleLogout.bind(this);
 
         this.state = {
             isModalOpened: false,
-            isNavOpen: false
+            isNavOpen: false,
+            message: ''
         };
-
+        
 
     }
+
+    showMessage({type, message} ) {
+        let obj = {
+            "LOGIN_FAILURE" : () => 
+                this.setState({
+                    message: message
+                }),
+            "CLEAR": () => {
+                this.setState({
+                    message: ""
+                });
+                this.toggleModal();
+            }
+        };
+        obj[type]();
+
+        
+    };
+    
 
     toggleModal() {
         this.setState({
@@ -39,15 +67,38 @@ export default class Header extends React.Component {
         });
     }
 
-    handleLogin(e) {
-        this.toggleModal();
-        console.log(this.username.value, this.password.value, this.remember.checked);
-        e.preventDefault();
+    handleLogout() {
+        this.props.logoutUser();
+    }
+
+    handleSubmit(values) {
+        // this.toggleModal();
+        // console.log(values);
+        this.props.loginUser({
+            username: values.username,
+            password: values.password 
+        }).then((msg) => {
+            console.log("Original msg", msg);
+            if(msg) {
+                this.showMessage({
+                    type: msg.type || "",
+                    message: msg.message || ""
+                 });
+                 return;
+            }
+            this.showMessage({ type: "CLEAR", message: ""});
+
+        });
+        // e.preventDefault();
     }
 
     render() {
+        let message = this.state.message || "";
         const name = "Con Fusion";
-
+        console.log("Header render", this.state.message, this.props.auth);
+        console.log("this.props.auth.isAthenticated",  this.props.auth, this.props.auth.isAuthenticated);
+        let navigate = (this.props.auth.isAuthenticated === true) ? <Navigate to="/favorites" /> :  ""  ;
+        
         return (
             <React.Fragment>
                 <Navbar bg="dark" className="navbar-dark" expand="md"> 
@@ -56,7 +107,7 @@ export default class Header extends React.Component {
                     <Navbar.Brand href="/" bg="light"
                         className="mr-auto"
                     >
-                        Retoran 
+                        Restoran 
                         <img src='/assets/images/logo.png' height="30" width="41" alt='Ristorante Con Fusion' />
                     </Navbar.Brand>
 
@@ -72,13 +123,38 @@ export default class Header extends React.Component {
                                     <Link className="nav-link"  to='/menu'><span className="fa fa-list fa-lg"></span> Menu</Link>
                                 </Nav.Item>
                                 <Nav.Item>
+                                { this.props.auth.isAuthenticated ?
+                                    <Link className="nav-link" to="/favorites">
+                                        <span className="fa fa-heart fa-lg"></span> My Favorites
+                                    </Link>
+                                    :
+                                    ""
+                                }
+                                </Nav.Item>
+                                <Nav.Item>
                                     <Link className="nav-link" to='/contactus'><span className="fa fa-address-card fa-lg"></span> Contact Us</Link>
                                 </Nav.Item>
                             </Nav>
-                            <Nav className='ml-auto'>
+                            <Nav className='ml-auto' navbar>
                                 <Nav.Item>
-                                    <Button outline="true" onClick={this.toggleModal}>
-                                        <span className='fa fa-sign-in fa-lg'>Login</span></Button>
+                                    { this.props.auth.isAuthenticated === false ?
+                                        <Button onClick={this.toggleModal}>
+                                            <span className="fa fa-sign-in fa-lg"></span> Login
+                                        </Button>
+                                    :
+                                    <div>
+                                        <div className='navbar-text mr-3'>
+                                            {this.props.auth.user.username}
+                                            <Button  onClick={this.handleLogout}>
+                                                <span className="fa fa-sign-out fa-lg"></span> Logout
+                                                {this.props.auth.isFetching ?
+                                                    <span className="fa fa-spinner fa-pulse fa-fw"></span>
+                                                    : null
+                                                }
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    }
                                 </Nav.Item>
                             </Nav>
                             {/* <Outlet /> */}
@@ -107,34 +183,75 @@ export default class Header extends React.Component {
                         <Modal.Title>Login</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <Form onSubmit={this.handleLogin}>
-                            <Form.Group>
-                                <Form.Label htmlFor="username">Username</Form.Label>
-                                <Form.Control type="text" placeholder="Enter username"
+                        <Form model="login" onSubmit={(values) => this.handleSubmit(values)}>
+                            {/* <Row className="form-group mb-3">
+ */}
+                            <Row className="form-group mb-3">
+                            
+                                {/* <F.Label htmlFor="username">Username</F.Label> */}
+                                {/* <F.Control type="text" placeholder="Enter username"
                                     id="username" name="username" 
                                     ref={(input) => this.username = input}
-                                />
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label htmlFor="password">Password</Form.Label>
-                                <Form.Control type="password" placeholder="Enter username"
-                                    id="password" name="password"
-                                    ref={(input) => this.password = input} //uncontrolled
+                                /> */}
+                                <F.Label htmlFor="username" md={2} column sm="2">Username</F.Label>
 
+                                 <Control.text model=".username"  placeholder="Enter your username here" 
+                                    id="username"
+                                    name="username"
+                                    className='F-control'
+                                    validators={{
+                                        required, minLength: minLength(3),
+                                        maxLength: maxLength(30)
+                                    }}
                                 />
-                            </Form.Group>
-                            <Form.Group>
+                                <Errors 
+                                    className='text-danger'
+                                    model=".username"
+                                    show="touched"
+                                    messages={{
+                                        required: 'Required',
+                                        minLength: ">= 2 char.-s",
+                                        maxLength: '< 15 char.-s'
+                                    }}
+                                />
+                          
+                            </Row>
+                            <Row className="form-group mb-3">
+                                <F.Label htmlFor="password">Password</F.Label>
+                                <Control.text model=".password" type="password" placeholder="Enter pwd"
+                                    id="password" name="password"
+                                    className='F-control'
+                                    validators={{
+                                        required, minLength: minLength(3),
+                                        maxLength: maxLength(15)
+                                    }}
+                                />
+                                 <Errors 
+                                    className='text-danger'
+                                    model=".username"
+                                    show="touched"
+                                    messages={{
+                                        required: 'Required',
+                                        minLength: ">= 2 char.-s",
+                                        maxLength: '< 15 char.-s'
+                                    }}
+                                />
+                            </Row>
+                            <Row className="form-group mb-3">
+
                                 
-                                <Form.Check 
+                                <F.Check 
                                     type="checkbox"
                                     id="remember"
                                     label="remember me"
                                     ref={(input) => this.remember = input}
 
                                 /> 
-                            </Form.Group>
+                            </Row>
                             <Button type="submit" value="submit" color="primary">Login</Button>
                         </Form>
+                        {message}
+                        {navigate}
                     </Modal.Body>
                 </Modal>
             </React.Fragment>

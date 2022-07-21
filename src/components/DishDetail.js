@@ -1,6 +1,6 @@
 import React from "react";
 import Card from 'react-bootstrap/Card';
-import { ListGroup, Breadcrumb } from 'react-bootstrap';
+import { ListGroup, Breadcrumb, Button } from 'react-bootstrap';
 import Comment from './Comment'
 import { CommentForm } from './CommentForm'
 import { Loading } from "./Loading";
@@ -52,7 +52,8 @@ function RenderCommnets({comments, postComment, dishId}) {
     );
 }
 
-function RenderDish({dish}) {
+function RenderDish({dish, favorite, postFavorite}) {
+    console.log("RenderDish", dish, favorite, postFavorite)
     return (
         <div  className="col-12 col-md-5 m-1">
             <FadeTransform in transformProps={{
@@ -63,6 +64,15 @@ function RenderDish({dish}) {
             <Card.Img width="100%" variant="right" src={baseUrl + dish.image} 
                 alt={dish.name}
             />
+            <Card.ImgOverlay>
+                <Button color="primary" onClick={() => favorite ? console.log('Already favorite') : postFavorite(dish._id)}>
+                    {favorite ?
+                        <span className="fa fa-heart"></span>
+                        : 
+                        <span className="fa fa-heart-o"></span>
+                    }
+                </Button>
+            </Card.ImgOverlay>
             <Card.Body>
                 <Card.Title>{dish.name}</Card.Title>
                 <Card.Text>{dish.description}</Card.Text>
@@ -115,7 +125,7 @@ const DishDetail = (props) => {
                     </div>
                 </div>
                 <div className="row"> 
-                    <RenderDish dish={props.dish} />
+                    <RenderDish dish={props.dish} favorite={props.favorite} postFavorite={props.postFavorite}/>
                     
                     <RenderCommnets comments={props.comments}
                         postComment={props.postComment}
