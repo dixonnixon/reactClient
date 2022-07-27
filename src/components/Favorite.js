@@ -7,7 +7,7 @@ import { Loading } from './Loading';
 
 function RenderMenuItem({ dish, deleteFavorite }) {
     return(
-        <Card >
+        <Card style={{ width: '18rem' }}>
             <Card.Img width="100%" variant="right" src={baseUrl + dish.image} 
                 alt={dish.name}
             />
@@ -24,7 +24,7 @@ function RenderMenuItem({ dish, deleteFavorite }) {
 }
 
 const Favorites = (props) => {
-    console.log('Favorite', props);
+    // console.log('Favorite', props);
     if (props.favorites.isLoading) {
         return(
             <div className="container">
@@ -47,7 +47,7 @@ const Favorites = (props) => {
     else if (props.favorites.favorites.favorites) {
         const favorites = props.favorites.favorites.favorites.dishes.map((dish) => {
             return (
-                <div key={dish._id} className="col-12 mt-5">
+                <div key={dish._id} className="col-lg-3 col-md-6 col-sm-6  col-xl-3  mt-2">
                     <RenderMenuItem dish={dish} deleteFavorite={props.deleteFavorite} />
                 </div>
             );

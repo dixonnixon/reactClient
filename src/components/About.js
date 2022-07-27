@@ -21,7 +21,7 @@ const styles={
     }
 }
 function RenderLeader({leader}) {
-    console.log(leader);
+    // console.log(leader);
 
     let sign = "";
     if(leader.id % 2 === 0) {
@@ -57,7 +57,7 @@ function RenderLeader({leader}) {
 
 function About(props) {
     const leaders = props.leaders.map((leader, index) => {
-        console.log(leader, index);
+        // console.log(leader, index);
         return (
             <Fade in key={index}>
             <ListGroup.Item key={index}>

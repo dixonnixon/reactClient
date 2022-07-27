@@ -33,7 +33,9 @@ export const Auth = (state = {
         case ActionTypes.LOGOUT_REQUEST:
             return {...state,
                 isLoading: true,
-                isAuthenticated: true
+                isAuthenticated: true,
+                token: action.token,
+                user: action.credentials
             };
         case ActionTypes.LOGOUT_SUCCESS:
             return {...state,

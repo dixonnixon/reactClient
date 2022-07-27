@@ -7,7 +7,7 @@ export const favorites = (state = {
     }, action) => {
     switch(action.type) {
         case ActionTypes.ADD_FAVORITES:
-            return {...state, isLoading: false, errMess: null, favorites: action.payload};
+            return {...state, isLoading: false, errMess: null, favorites: action.payload.favorites};
 
         case ActionTypes.FAVORITES_LOADING:
             return {...state, isLoading: true, errMess: null, favorites: null};

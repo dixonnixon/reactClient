@@ -21,7 +21,7 @@ export  class CommentForm extends React.Component {
     }
 
     handleSubmit( values) {
-        console.log("handleSubmit CommentsForm",values);
+        // console.log("handleSubmit CommentsForm", this.props.dishId, values);
         this.toggleModal();
         this.props.postComment(this.props.dishId, values.rating, values.author, values.message);
     }

@@ -20,18 +20,22 @@ export const favoritesLoading = () => ({
 
 export const postComment =  (dishId, rating, author, comment) => (dispatch) => {
     const newComment = {
-        dishId: dishId,
+        dish: dishId,
         rating: rating,
         author: author,
         comment: comment
     };
     newComment.date = new Date().toISOString();
 
+    const bearer = 'Bearer ' + localStorage.getItem('token');
+
+
     return fetch(baseUrl + 'comments', {
         method: "POST",
         body: JSON.stringify(newComment),
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
+            'Authorization': bearer
         },
         credentials: "same-origin"
     })
@@ -51,7 +55,7 @@ export const postComment =  (dishId, rating, author, comment) => (dispatch) => {
     })
     .then(response => response.json())
     .then(response => dispatch(addComment(response)))
-    .catch(error => console.log('PostComments', error.message));
+    .catch(error =>  console.log('PostComments', error.message));
 
 };
 
@@ -80,15 +84,13 @@ export const postFeedback = (feedback) => (dispatch) => {
     })
     .then(response => response.json())
     .then(response => dispatch(addComment(response)))
-    .catch(error => console.log('PostComments', error.message));
+    .catch(error =>  console.log('PostComments', error.message));
 };
 //fetchDishes is a Thunk
 export const fetchDishes = () => (dispatch) => {
     
     dispatch(dishesLoading(true));
-    // setTimeout(() => {
-    //     dispatch(addDishes(DISHES));
-    // }, 2000);
+    
     fetch(baseUrl + 'dishes')
         .then(response => {
             if(response.ok) {
@@ -111,7 +113,7 @@ export const fetchDishes = () => (dispatch) => {
 
 export const loginUser = (credentials) => (dispatch) => {
     dispatch(requestLogin(credentials));
-    console.log(credentials);
+    // console.log(credentials);
 
     return fetch(baseUrl + 'users/login', {
         method: 'POST',
@@ -122,8 +124,8 @@ export const loginUser = (credentials) => (dispatch) => {
     })
     .then(response => response.json())
     .then(response => {
-        // response.json().then(messeage => console.log(message));
-        console.log("Post USer Login",  response);
+        // response.json().then(messeage => // console.log(message));
+        // console.log("Post USer Login",  response);
        if(!response.success) {
             let error = new Error('Error ' + response.status + ': ' + response.err.message);
             error.response = response;
@@ -143,7 +145,7 @@ export const loginUser = (credentials) => (dispatch) => {
     })
     
     .then(response => {
-        console.log("Response Login", response);
+        // console.log("Response Login", response);
         if (response.success) {
             // If login was successful, set the token in local storage
             localStorage.setItem('token', response.token);
@@ -160,7 +162,7 @@ export const loginUser = (credentials) => (dispatch) => {
         }
     })
     .catch((error) => {
-        console.log(error)
+        // console.log(error)
         return dispatch(loginError(error.message + ":-------------------Alert!"));
     
 
@@ -192,12 +194,13 @@ export const deleteFavorite = (dishId) => (dispatch) => {
             throw error;
       })
     .then(response => response.json())
-    .then(favorites => { console.log('Favorite Deleted', favorites); dispatch(addFavorites(favorites)); })
+    .then(favorites => { // console.log('Favorite Deleted', favorites); 
+        dispatch(addFavorites(favorites)); })
     .catch(error => dispatch(favoritesFailed(error.message)));
 };
 
 export const receiveLogin = (response) => {
-    console.log("receiveLogin", response);
+    // console.log("receiveLogin", response);
     return {
         type: ActionTypes.LOGIN_SUCCESS,
         token: response.token
@@ -250,7 +253,7 @@ export const addLeaders = (leaders) => ({
 export const fetchLeaders = () => (dispatch) => {
     fetch(baseUrl + 'leaders')
             .then(response => {
-                console.log('leaders response', response);
+                // console.log('leaders response', response);
 
                 if(response.ok) {
                     return response;
@@ -272,10 +275,7 @@ export const fetchLeaders = () => (dispatch) => {
 };
 
 export const fetchComments = () => (dispatch) => {
-    
-    // setTimeout(() => {
-    //     dispatch(addDishes(DISHES));
-    // }, 2000);
+  
     fetch(baseUrl + 'comments')
             .then(response => {
                 if(response.ok) {
@@ -323,12 +323,14 @@ export const fetchComments = () => (dispatch) => {
                 throw error;
           })
         .then(response => response.json())
-        .then(favorites => { console.log('Favorite Added', favorites); dispatch(addFavorites(favorites)); })
+        .then(favorites => { // console.log('Favorite Added', favorites); 
+            dispatch(addFavorites(favorites));
+         })
         .catch(error => dispatch(favoritesFailed(error.message)));
     }
 
     export const fetchFavorites = () => (dispatch) => {
-        // console.log("never type this here", localStorage.getItem("token"));
+        // // console.log("never type this here", localStorage.getItem("token"));
         dispatch(favoritesLoading(true));
         const bearer = 'Bearer ' + localStorage.getItem('token');
 
@@ -342,7 +344,7 @@ export const fetchComments = () => (dispatch) => {
             })
 
             .then(response => {
-                console.log("fetchFavorite", response);
+                // console.log("fetchFavorite", response);
                 if (response.ok) {  
                     return response;
                 }
@@ -367,11 +369,11 @@ export const fetchComments = () => (dispatch) => {
 
     // Logs the user out
     export const logoutUser = () => (dispatch) => {
-        dispatch(requestLogout())
+        // dispatch(requestLogout())
         localStorage.removeItem('token');
         localStorage.removeItem('credentials');
         dispatch(favoritesFailed("Error 401: Unauthorized"));
-        dispatch(receiveLogout())
+        dispatch(receiveLogout());
     };
 
     export const receiveLogout = () => {
@@ -390,9 +392,7 @@ export const fetchComments = () => (dispatch) => {
     export const fetchPromos = () => (dispatch) => {
         
         dispatch(promosLoading(true));
-        // setTimeout(() => {
-        //     dispatch(addDishes(DISHES));
-        // }, 2000);
+        
         fetch(baseUrl + 'promotions')
         .then(response => {
             if(response.ok) {

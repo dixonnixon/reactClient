@@ -61,11 +61,25 @@ import { Nav } from 'react-bootstrap';
 //    mapDispatchToProps() - ?
 //  using <Provider> to wrap root
 
+const parseJwt = (token) => {
+  // console.log("token", JSON.parse(atob(token.split('.')[1])));
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+};
 export const withRouter = (Component) => {
+
 	const Wrapper = (props) => {
-    const history = useNavigate();
+    const navigate = useNavigate();
+    // console.log("history", navigate, props, props.history);
+
+
+    // props.history.push(props.history.location.pathname);
+
     
-		return <Component history={history} {...props} />;
+		return <Component {...props} navigate={navigate}/>;
 	};
 	return Wrapper;
 };
@@ -78,7 +92,7 @@ const mapStateToProps = state => {
     promotions: state.promotions,
     leaders: state.leaders,
     favorites: state.favorites,
-    auth: state.auth
+    auth: state.auth,
   };
 };
 
@@ -96,8 +110,7 @@ const mapDispatchToProps = (dispatch) => ({
   logoutUser: () => dispatch(logoutUser()),
   deleteFavorite: (dishId) => dispatch(deleteFavorite(dishId)),
   fetchFavorites: () => dispatch(fetchFavorites()),
-  postFavorite: (dishId) => dispatch(postFavorite(dishId)),
-
+  postFavorite: (dishId) => dispatch(postFavorite(dishId))
 
   // fetchFavorites: () => dispatch(fetchFavorites()),
 
@@ -105,7 +118,9 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 
-class Main extends React.Component {
+
+
+class Main extends Component {
 
   // constructor(props) {
   //   super(props);
@@ -120,10 +135,29 @@ class Main extends React.Component {
   // }
 
   // handleSelectDish(dishId) {
-  //   console.log(dishId);
+  //   // console.log(dishId);
   //   this.setState({
   //     selectedDish: dishId
   //   });
+
+    // this.logOut = this.logOut.bind(this);
+    // // console.log("MainConstructor", this.props, this.context);
+    // this.props.history.listen(() => {
+    //   this.logOut();
+    // });
+    // this.props.history.listen((t) => {
+    //   const user = JSON.parse(localStorage.getItem("credentials"));
+    //   const token = localStorage.getItem("token");
+
+    //   // console.log("user---------------------------------------------", user,  t);
+    //   if (user) {
+    //     const decodedJwt = parseJwt(token);
+    //     // console.log("jwtExp", decodedJwt.exp, decodedJwt.exp * 1000, Date.now());
+    //     if (decodedJwt.exp * 10 < Date.now()) {
+    //       this.logOut();
+    //     }
+    //   }
+    // });
   // }
 
   componentDidMount() {
@@ -132,15 +166,36 @@ class Main extends React.Component {
     this.props.fetchPromos();
     this.props.fetchLeaders();
     this.props.fetchFavorites();
+      let value = this.context;
+    // console.log(value);
+
+        this.props.history.listen((t) => {
+      const user = JSON.parse(localStorage.getItem("credentials"));
+      const token = localStorage.getItem("token");
+
+      // console.log("user---------------------------------------------", user,  t);
+      if (user) {
+        const decodedJwt = parseJwt(token);
+        // console.log("jwtExp", decodedJwt.exp, decodedJwt.exp * 1000, Date.now());
+        if (decodedJwt.exp * 1000 < Date.now()) {
+          this.logOut();
+        }
+      }
+    });
+  }
+
+  async logOut() {
+    // this.props.dispatch(logoutUser());
+    await  this.props.logoutUser();
 
   }
 
   render() {
-      
-      console.log("render MAin", this.props, 
-        this.props.dishes.dishes, this.props.dishes.leaders,
-        this.props.dishes.dishes.filter((dish) => dish.featured)[0]
-       );
+
+      // console.log("render MAin", this.props, this.props.history,
+      //   this.props.dishes.dishes, this.props.dishes.leaders,
+      //   this.props.dishes.dishes.filter((dish) => dish.featured)[0]
+      //  );
       const HomePage = () => {
         return(
             <Home 
@@ -159,9 +214,9 @@ class Main extends React.Component {
       
       const DishWithId = () => {
         let params = useParams();
-        console.log("Match",  params, this.props,
-          this.props.favorites,
-         );
+        // console.log("Match",  params, this.props,
+        //   this.props.favorites,
+        //  );
         return (
           this.props.auth.isAuthenticated
         ?
@@ -171,7 +226,7 @@ class Main extends React.Component {
           comments={this.props.comments.comments.filter((comment) => comment.dish === params.dishId)}
           commentsErrMess={this.props.comments.errMess}
           postComment={this.props.postComment}
-          // favorite={this.props.favorites.favorites.dishes.some((dish) => dish._id === params.dishId)}
+          favorite={this.props.favorites.favorites.dishes.some((dish) => dish._id === params.dishId)}
           postFavorite={this.props.postFavorite}
           />
         :
@@ -198,7 +253,7 @@ class Main extends React.Component {
       //   )}    />
       // );
       const PrivateRoute = () => {
-        console.log("Private", this.props.auth);
+        // console.log("Private", this.props.auth);
         const auth = this.props.auth.isAuthenticated; // determine if authorized, from context or however you're doing it
         // If authorized, return an outlet that will render child elements
         // If not, return element that will navigate to login page
@@ -206,32 +261,34 @@ class Main extends React.Component {
       };
 
     const AboutPage = () => {
-      console.log("AboutPage", this.props);
+      // console.log("AboutPage", this.props);
       return (
         <About leaders={this.props.leaders.leaders} />
       );
     };
     const currentKey = window.location.pathname.split('/')[1] || '/';
     
+
+
     return (
       <div >
-        
         <Header 
           auth={this.props.auth}
           loginUser={this.props.loginUser}
           logoutUser={this.props.logoutUser} 
         />
+        
         <TransitionGroup  >
           <CSSTransition key={currentKey} classNames="page"
             timeout={400} appear>
         
-          <Routes>
+          <Routes >
               <Route path="/" >
                 <Route path="home" element={<HomePage />}/>
                 <Route path="aboutus" element={<AboutPage />}/>
-                <Route path='menu' element={<Menu dishes={this.props.dishes}/>} />
+                <Route path='menu' exact element={<Menu dishes={this.props.dishes}/>} />
                   {/*using arrayfunc for props passing*/}
-                <Route path="menu/:dishId" element={<DishWithId />} />
+                <Route path="menu/:dishId" exact element={<DishWithId />} />
                 <Route exact element={<PrivateRoute/>}>
                   <Route  path="/favorites" element={<Favorites favorites={this.props.favorites} deleteFavorite={this.props.deleteFavorite} />}/>
                 </Route>
@@ -241,8 +298,9 @@ class Main extends React.Component {
                 
                 />
                 <Route path="*" element={<HomePage />} />
+                
               </Route>
-              
+             
             
           </Routes>
           </CSSTransition>

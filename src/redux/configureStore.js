@@ -1,6 +1,7 @@
 import { configureStore as cs } from '@reduxjs/toolkit'
 import { createForms } from 'react-redux-form';
 import { Dishes } from './dishes';
+// import dishesReducer from './dishes';
 import { Comments } from './comments';
 import { Leaders } from './leaders';
 import { Promotions } from './promotions';
@@ -57,6 +58,7 @@ export  const configureStore = () => {
     const store = cs({
         reducer: combineReducers({
             dishes: Dishes,
+            // dishes: dishesReducer,
             comments: Comments,
             leaders: Leaders,
             promotions: Promotions,

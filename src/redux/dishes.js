@@ -33,3 +33,27 @@ export const Dishes = (state = {
             return state;
     }
 };
+
+
+// import { createSlice } from '@reduxjs/toolkit';
+
+// export const dishesSlice = createSlice({
+//     name: 'dish',
+//     initialState: {
+//         isLoading: false,
+//         errmsg: null,
+//         dishes: []
+//     }, 
+//     reducers: {
+//         add: (state, action) => { 
+//             // console.log("action", action);
+//             return state; 
+//         },
+//         loading: state => state,
+//         failed: state => state
+//     }
+// });
+
+// export const { add, loading, failed } = dishesSlice.actions;
+
+// export default dishesSlice.reducer;

@@ -73,12 +73,12 @@ export default class Header extends React.Component {
 
     handleSubmit(values) {
         // this.toggleModal();
-        // console.log(values);
+        // // console.log(values);
         this.props.loginUser({
             username: values.username,
             password: values.password 
         }).then((msg) => {
-            console.log("Original msg", msg);
+            // console.log("Original msg", msg);
             if(msg) {
                 this.showMessage({
                     type: msg.type || "",
@@ -87,7 +87,6 @@ export default class Header extends React.Component {
                  return;
             }
             this.showMessage({ type: "CLEAR", message: ""});
-
         });
         // e.preventDefault();
     }
@@ -95,8 +94,8 @@ export default class Header extends React.Component {
     render() {
         let message = this.state.message || "";
         const name = "Con Fusion";
-        console.log("Header render", this.state.message, this.props.auth);
-        console.log("this.props.auth.isAthenticated",  this.props.auth, this.props.auth.isAuthenticated);
+        // console.log("Header render", this.state.message, this.props.auth);
+        // console.log("this.props.auth.isAthenticated",  this.props.auth, this.props.auth.isAuthenticated);
         let navigate = (this.props.auth.isAuthenticated === true) ? <Navigate to="/favorites" /> :  ""  ;
         
         return (

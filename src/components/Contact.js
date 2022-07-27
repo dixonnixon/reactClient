@@ -21,7 +21,7 @@ class Contact extends React.Component  {
     }
 
     handleSubmit(values) {
-        console.log("handleSubmitvalues:", values);
+        // console.log("handleSubmitvalues:", values);
         this.props.postFeedback(values);
         this.props.resetFeedbackForm();
     }

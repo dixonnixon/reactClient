@@ -19,17 +19,17 @@ import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 // export default class DishDetail extends React.Component {
     
     // componentDidMount() {
-    //     console.log("componentDidMount() invoked Dish");
+    //     // console.log("componentDidMount() invoked Dish");
     // }
 
     // componentDidUpdate() { //didUpdate method invoked after render
-    //     console.log("componentDidUpdate() invoked Dish");
+    //     // console.log("componentDidUpdate() invoked Dish");
     // }
 function RenderCommnets({comments, postComment, dishId}) {
     const commentsView = comments.map((comment) => {
-        console.log("RenderCommnets", comment, comment.id);
+        // console.log("RenderCommnets", comment, comment._id);
         return (    
-                <Fade in key={comment.id.toString()}>
+                <Fade in key={comment._id.toString()}>
                     <ListGroup.Item >
                         <div className="row">
                             <Comment comment={comment} />
@@ -53,7 +53,7 @@ function RenderCommnets({comments, postComment, dishId}) {
 }
 
 function RenderDish({dish, favorite, postFavorite}) {
-    console.log("RenderDish", dish, favorite, postFavorite)
+    // console.log("RenderDish", dish, favorite, postFavorite)
     return (
         <div  className="col-12 col-md-5 m-1">
             <FadeTransform in transformProps={{
@@ -65,7 +65,7 @@ function RenderDish({dish, favorite, postFavorite}) {
                 alt={dish.name}
             />
             <Card.ImgOverlay>
-                <Button color="primary" onClick={() => favorite ? console.log('Already favorite') : postFavorite(dish._id)}>
+                <Button color="primary" onClick={() => favorite ?  console.log('Already favorite') : postFavorite(dish._id)}>
                     {favorite ?
                         <span className="fa fa-heart"></span>
                         : 
@@ -87,7 +87,7 @@ function RenderDish({dish, favorite, postFavorite}) {
 const DishDetail = (props) => {
     // const [text, setText] = useState('');
 
-    // console.log(text);
+    // // console.log(text);
 
 
     if(props.isLoading) {
@@ -110,7 +110,7 @@ const DishDetail = (props) => {
     }
 
     else if(props.dish !== undefined) {
-        // console.log("Detail", text);
+        // console.log("Detail", props, props.dish);
         return (
             
             <div className="container">
@@ -129,7 +129,7 @@ const DishDetail = (props) => {
                     
                     <RenderCommnets comments={props.comments}
                         postComment={props.postComment}
-                        dishId={props.dish.id}
+                        dishId={props.dish._id}
                     />
                         
                 </div>

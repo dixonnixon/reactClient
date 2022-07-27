@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Breadcrumb } from 'react-bootstrap';
+import { Card, Breadcrumb, Container, Row, Col } from 'react-bootstrap';
 import {Link } from 'react-router-dom';
 import { Loading } from "./Loading";
 
@@ -15,7 +15,7 @@ import { baseUrl } from "../shared/baseUrl";
 // export  class Menu extends React.Component {
 
     // componentDidMount() {
-    //   console.log("componentDidMount() invoked Menu");
+    //   // console.log("componentDidMount() invoked Menu");
     // }
 
     // render() {
@@ -35,19 +35,19 @@ function RenderMenuItem({dish}) {
 }
 
 const Menu = (props) => {
-  console.log("RenderMenu invoked", props);
+  // console.log("RenderMenu invoked", props);
   const menu = props.dishes.dishes.map((dish) => {
-    console.log("Menu dish", dish);
+    // console.log("Menu dish", dish);
       return (
-         <div key={dish._id} className="col-12 col-md-5 m-1">
+         <Col key={dish._id} xs={12} lg={3} md={4}>
             {/* <Card onClick={() => this.handleSelectDish(dish)}> */}
          
            {/* <DishDetail overlay="true" dish={dish} 
              onClick={() => this.props.onClick(dish.id)}
            /> */}
            {/* <RenderMenuItem dish={dish} onClick={props.onClick}/> */}
-           <RenderMenuItem key={dish._id} dish={dish} />
-         </div>
+           <RenderMenuItem  dish={dish} />
+         </Col>
              
       );
 
@@ -64,18 +64,18 @@ const Menu = (props) => {
   }
   else if(props.dishes.errmsg) {
     return (
-      <div className="container">
-          <div className="row">
+      <Container>
+          <Row>
               <h4>{props.dishes.errmsg}</h4>
-          </div>
-      </div>
+          </Row>
+      </Container>
     );
   }
   else
     return (
-        <div className="container">
-          <div  className="row">
-            <div className="col-sm-12">
+        <Container>
+          <Row>
+            <Col xs={12}>
               <Breadcrumb>
                 {/* <Breadcrumb.Item href="/home">Home */}
                 {/* <Link to="/home">Home</Link> */}
@@ -83,13 +83,15 @@ const Menu = (props) => {
                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: "/home"}}>Home</Breadcrumb.Item>
                 <Breadcrumb.Item  active>Menu</Breadcrumb.Item>
               </Breadcrumb>
-            </div>
-            <div className="col-sm-12">
+            </Col>
+            <Col xs={12}>
               <h3>Menu</h3>
               <hr />
-              {menu}
-            </div>
-          </div>
+              <Row>
+                  {menu}
+              </Row>
+            </Col>
+          </Row>
           
           
           {/* <div className="row">
@@ -98,7 +100,7 @@ const Menu = (props) => {
               dish={this.state.selectedDish}
               onClick={() => this.props.onClick(dish.id)}
             />*/}
-        </div> 
+        </Container>
     );
 };
 
