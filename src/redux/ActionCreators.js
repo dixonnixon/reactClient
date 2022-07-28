@@ -12,6 +12,16 @@ export const addComment = (comment) => ({
     // }
     payload: comment
 });
+export const addFeedback = (feedback) => ({
+    type: ActionTypes.ADD_FEEDBACK, //type is the unique name of the action
+    // payload: { //here we define what content should action returns
+    //     dishId: dishId,
+    //     rating: rating,
+    //     author: author,
+    //     comment: comment
+    // }
+    payload: feedback
+});
 
 export const favoritesLoading = () => ({
     type: ActionTypes.FAVORITES_LOADING
@@ -60,31 +70,39 @@ export const postComment =  (dishId, rating, author, comment) => (dispatch) => {
 };
 
 export const postFeedback = (feedback) => (dispatch) => {
+    const bearer = 'Bearer ' + localStorage.getItem('token');
+
     return fetch(baseUrl + 'feedback', {
         method: "POST",
         body: JSON.stringify(feedback),
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': bearer
         },
         credentials: "same-origin"
     })
+    .then(response => response.json())
+
     .then(response => {
         if(response.ok) {
             return response;
         }
         else {
+            console.log(response);
             let error = new Error('Error ' + response.status
                 + ': ' + response.statusText);
             error.response = response;
-            throw error;
+            return JSON.stringify(error.response);
+            // throw error;
         }
     }, error => {
+        console.log(error);
         let errmsg = new Error(error.message);
-        throw errmsg;
+        return JSON.parse(error);
+        // throw error;
     })
-    .then(response => response.json())
-    .then(response => dispatch(addComment(response)))
-    .catch(error =>  console.log('PostComments', error.message));
+    .then(response => dispatch(addFeedback(response)))
+    .catch(error =>  console.log('PostFeedback', error, error.message));
 };
 //fetchDishes is a Thunk
 export const fetchDishes = () => (dispatch) => {
@@ -194,10 +212,15 @@ export const deleteFavorite = (dishId) => (dispatch) => {
             throw error;
       })
     .then(response => response.json())
-    .then(favorites => { // console.log('Favorite Deleted', favorites); 
+    .then(favorites => {  console.log('Favorite Deleted', favorites); 
         dispatch(addFavorites(favorites)); })
     .catch(error => dispatch(favoritesFailed(error.message)));
 };
+
+export const addFavorites = (favorites) => ({
+    type: ActionTypes.ADD_FAVORITES,
+    payload: favorites
+});
 
 export const receiveLogin = (response) => {
     // console.log("receiveLogin", response);
@@ -323,7 +346,7 @@ export const fetchComments = () => (dispatch) => {
                 throw error;
           })
         .then(response => response.json())
-        .then(favorites => { // console.log('Favorite Added', favorites); 
+        .then(favorites => {  console.log('Favorite Added', favorites); 
             dispatch(addFavorites(favorites));
          })
         .catch(error => dispatch(favoritesFailed(error.message)));
@@ -344,7 +367,7 @@ export const fetchComments = () => (dispatch) => {
             })
 
             .then(response => {
-                // console.log("fetchFavorite", response);
+                console.log("fetchFavorite", response);
                 if (response.ok) {  
                     return response;
                 }
@@ -360,7 +383,7 @@ export const fetchComments = () => (dispatch) => {
             })
             .then(response => response.json())
 
-            .then(favorites => dispatch(addFavorites(favorites)))
+            .then(favorites => { console.log("fetchFavorites", favorites); return dispatch(addFavorites(favorites.favorites))})
             .catch(error => dispatch(favoritesFailed(error.message)));
         }
 
@@ -419,10 +442,7 @@ export const favoritesFailed = (errmess) => ({
     payload: errmess
 });
 
-export const addFavorites = (favorites) => ({
-    type: ActionTypes.ADD_FAVORITES,
-    payload: favorites
-});
+
 
 export const promosLoading = () => ({
     type: ActionTypes.PROMOS_LOADING

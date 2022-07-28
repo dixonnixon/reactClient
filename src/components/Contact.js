@@ -3,31 +3,63 @@ import React from 'react';
 import {Breadcrumb,  Form as F,  Col,  Row, Button} from 'react-bootstrap';
 import  { Link } from 'react-router-dom';
 // import { Control, LocalForm, Errors } from 'react-redux-form';
-import { Control, Form, Errors } from 'react-redux-form';
+import { Control, Form, Errors, actions } from 'react-redux-form';
 
 const required = (val) => val && val.length,
     maxLength = (len) => (val) =>!(val) || (val.length <= len),
     minLength = (len) => (val) => (val) && (val.length >= len),
     isNumber = (val) => !isNaN(Number(val)),
-    validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
-
+    validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val),
+    telnum = (val) => /^\d{3}-\d{3}-\d{4}$/i.test(val);
 
 // function Contact(props) {
 class Contact extends React.Component  {
     constructor(props) {
         super(props);
 
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = {
+            message: false
+        };
+    //     this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleSubmit(values) {
         // console.log("handleSubmitvalues:", values);
-        this.props.postFeedback(values);
-        this.props.resetFeedbackForm();
+        // this.props.postFeedback(values).then(res => {
+        //     let result = JSON.parse(res.payload);
+        //     console.log("", result, (result.code));
+        //     if(result.code) {
+        //         console.log("Error", result.statusText);
+        //         return;
+        //     }
+        //     else {
+        //         this.props.resetFeedbackForm();
+        //     }
+
+        // });
+        this.props.postFeedback(values).then(res => {
+            let result = JSON.parse(res.payload);
+
+            return new Promise((res, rej) => {
+                if(result.code) {
+                    console.log("Error", result.statusText);
+                    this.setState({
+                        message: result.statusText
+                    });
+                }
+                else { res(true); 
+                    this.props.resetFeedbackForm();
+                    this.setState({
+                        message: false
+                    });
+
+                }
+            });
+        });
     }
 
     render() {
-    
+        
     return(
         <div className="container">
             <div className="row">
@@ -70,6 +102,7 @@ class Contact extends React.Component  {
                 <div className="col-sm-12">
                     <h3>Send Us a feedback</h3>
                 </div>
+                <div>{this.state.message}</div>
                 <div className="col-12 col-md-9">
                     <Form model="feedback" onSubmit={(values) => this.handleSubmit(values)}>
                         <Row className="form-group mb-3">
@@ -126,7 +159,7 @@ class Contact extends React.Component  {
                                     className='form-control'
                                     validators={{
                                         required, minLength: minLength(3),
-                                        maxLength: maxLength(15)
+                                        maxLength: maxLength(15), telnum
                                     }}
                                 />
                                 <Errors 
@@ -137,7 +170,7 @@ class Contact extends React.Component  {
                                         required: 'Required',
                                         minLength: ">= 2 char.-s",
                                         maxLength: '< 15 char.-s',
-                                        isNumber: 'you should enter number'
+                                        telnum: 'you should enter number in format xxx-xxx-xxxx'
                                     }}
                                 />
                             </Col>

@@ -14,7 +14,7 @@ function RenderMenuItem({ dish, deleteFavorite }) {
             <Card.Body>
                 <Card.Title>{dish.name}</Card.Title>
                 <Card.Text>{dish.description}</Card.Text>
-                <Button outline color="danger" onClick={() => deleteFavorite(dish._id)}>
+                <Button  color="danger" onClick={() => deleteFavorite(dish._id)}>
                     <span className="fa fa-times"></span>
                 </Button>
             </Card.Body>
@@ -24,7 +24,7 @@ function RenderMenuItem({ dish, deleteFavorite }) {
 }
 
 const Favorites = (props) => {
-    // console.log('Favorite', props);
+    console.log('Favorite', props);
     if (props.favorites.isLoading) {
         return(
             <div className="container">
@@ -44,8 +44,8 @@ const Favorites = (props) => {
         )
     }
     // else if (props.favorites.favorites.exists) {
-    else if (props.favorites.favorites.favorites) {
-        const favorites = props.favorites.favorites.favorites.dishes.map((dish) => {
+    else if (props.favorites.favorites) {
+        const favorites = props.favorites.favorites.dishes.map((dish) => {
             return (
                 <div key={dish._id} className="col-lg-3 col-md-6 col-sm-6  col-xl-3  mt-2">
                     <RenderMenuItem dish={dish} deleteFavorite={props.deleteFavorite} />

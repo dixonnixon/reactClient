@@ -32,6 +32,8 @@ import { actions } from 'react-redux-form';
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import { Nav } from 'react-bootstrap';
 
+
+import AuthContext from './context/Auth';
 //so wee need a state container to manage itself through a bunch of independent or related
 //components *REDUX<-Flux, Elm, ImmutableJs
 //1. It makes states mutations predictable
@@ -166,10 +168,9 @@ class Main extends Component {
     this.props.fetchPromos();
     this.props.fetchLeaders();
     this.props.fetchFavorites();
-      let value = this.context;
     // console.log(value);
 
-        this.props.history.listen((t) => {
+      this.props.history.listen((t) => {
       const user = JSON.parse(localStorage.getItem("credentials"));
       const token = localStorage.getItem("token");
 
@@ -191,7 +192,7 @@ class Main extends Component {
   }
 
   render() {
-
+      this.context.isAuthenticated = this.props.auth.isAuthenticated;
       // console.log("render MAin", this.props, this.props.history,
       //   this.props.dishes.dishes, this.props.dishes.leaders,
       //   this.props.dishes.dishes.filter((dish) => dish.featured)[0]
@@ -214,11 +215,13 @@ class Main extends Component {
       
       const DishWithId = () => {
         let params = useParams();
-        // console.log("Match",  params, this.props,
-        //   this.props.favorites,
-        //  );
+        console.log("Match",  params, this.props,
+          this.props.favorites,
+         );
         return (
-          this.props.auth.isAuthenticated
+        <AuthContext.Provider value={this.props.auth.isAuthenticated} >
+         
+          {this.props.auth.isAuthenticated
         ?
         <DishDetail dish={this.props.dishes.dishes.filter((dish) => dish._id === params.dishId)[0]}
           isLoading={this.props.dishes.isLoading}
@@ -238,7 +241,8 @@ class Main extends Component {
           postComment={this.props.postComment}
           favorite={false}
           postFavorite={this.props.postFavorite}
-          />
+          />}
+           </AuthContext.Provider>
         );
       };
 
@@ -268,7 +272,7 @@ class Main extends Component {
     };
     const currentKey = window.location.pathname.split('/')[1] || '/';
     
-
+    console.log("context", this.context);
 
     return (
       <div >
@@ -282,6 +286,9 @@ class Main extends Component {
           <CSSTransition key={currentKey} classNames="page"
             timeout={400} appear>
         
+          
+
+          
           <Routes >
               <Route path="/" >
                 <Route path="home" element={<HomePage />}/>
@@ -320,5 +327,8 @@ class Main extends Component {
   }
   
 }
+
+Main.contextType = AuthContext;
+
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
