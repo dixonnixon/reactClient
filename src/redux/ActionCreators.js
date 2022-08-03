@@ -125,7 +125,7 @@ export const fetchDishes = () => (dispatch) => {
             throw errmsg;
         })
         .then(response => response.json())
-        .then(dishes => dispatch(addDishes(dishes)))
+        .then(dishes => { console.log("fetchDishes", dishes); return dispatch(addDishes(dishes))})
         .catch(error => dispatch(dishesFailed(error.message)));
 };
 

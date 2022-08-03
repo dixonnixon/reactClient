@@ -21,9 +21,10 @@ class App extends Component {
   
   render() {
     // configureStore.subscribe(() => // console.log(configureStore.getState()))
-    // // console.log("Store", store.getState());
+    console.log("Store", store.getState());
     return (
       <Provider store={store}>
+        {/* <BrowserRouter> */}
         <CustomRouter history={history}>
         <div className="App">
           <Main history={history} />
@@ -31,13 +32,13 @@ class App extends Component {
           
         </div>
         </CustomRouter>
-        <BrowserRouter>
+        
         
           {/* <HistoryContext.Provider value={history} > */}
           
           {/* </HistoryContext.Provider> */}
         
-        </BrowserRouter>
+        {/* </BrowserRouter> */}
       </Provider>
     );
   }

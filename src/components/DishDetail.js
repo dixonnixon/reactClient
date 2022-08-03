@@ -54,7 +54,7 @@ function RenderCommnets({comments, postComment, dishId}) {
 }
 
 function RenderDish({dish, favorite, postFavorite}) {
-    console.log("Rd", favorite);
+    console.log("Rd", dish, favorite);
     
 
     // console.log("RenderDish", dish, favorite, postFavorite)

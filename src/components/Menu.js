@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, Breadcrumb, Container, Row, Col } from 'react-bootstrap';
-import {Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Loading } from "./Loading";
 
 import { baseUrl } from "../shared/baseUrl";
@@ -35,11 +35,15 @@ function RenderMenuItem({dish}) {
 }
 
 const Menu = (props) => {
-  // console.log("RenderMenu invoked", props);
+  console.log("RenderMenu invoked", props, useEffect(() => {
+    console.log("effect");
+  }));
   const menu = props.dishes.dishes.map((dish) => {
     // console.log("Menu dish", dish);
       return (
+        
          <Col key={dish._id} xs={12} lg={3} md={4}>
+            
             {/* <Card onClick={() => this.handleSelectDish(dish)}> */}
          
            {/* <DishDetail overlay="true" dish={dish} 

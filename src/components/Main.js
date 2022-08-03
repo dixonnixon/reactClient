@@ -75,7 +75,7 @@ export const withRouter = (Component) => {
 
 	const Wrapper = (props) => {
     const navigate = useNavigate();
-    // console.log("history", navigate, props, props.history);
+    console.log("Wrapper", navigate, props, props.history);
 
 
     // props.history.push(props.history.location.pathname);
@@ -87,13 +87,13 @@ export const withRouter = (Component) => {
 };
 
 const mapStateToProps = state => {
-  // console.log("mapState", state);
+  console.log("mapState", state);
   return {
+    favorites: state.favorites,
     dishes: state.dishes,
     comments: state.comments,
     promotions: state.promotions,
     leaders: state.leaders,
-    favorites: state.favorites,
     auth: state.auth,
   };
 };
@@ -163,14 +163,15 @@ class Main extends Component {
   // }
 
   componentDidMount() {
+    this.props.fetchFavorites();
     this.props.fetchDishes();
     this.props.fetchComments();
     this.props.fetchPromos();
     this.props.fetchLeaders();
-    this.props.fetchFavorites();
-    // console.log(value);
+    console.log("mounted Main", this.props.fetchFavorites(), this.props.fetchDishes(),
+      this);
 
-      this.props.history.listen((t) => {
+    this.props.history.listen((t) => {
       const user = JSON.parse(localStorage.getItem("credentials"));
       const token = localStorage.getItem("token");
 
@@ -214,10 +215,27 @@ class Main extends Component {
       }
       
       const DishWithId = () => {
+        
         let params = useParams();
         console.log("Match",  params, this.props,
           this.props.favorites,
          );
+        console.log("DishwithID", this.props.favorites);
+
+        if(this.props.dishes.isLoading) {
+          return (        <AuthContext.Provider value={this.props.auth.isAuthenticated} >
+            <div>Loading...</div></AuthContext.Provider>)
+        }
+        if(this.props.favorites.isLoading) {
+          return (        <AuthContext.Provider value={this.props.auth.isAuthenticated} >
+            <div>Loading...</div></AuthContext.Provider>)
+        }
+        // I don`t know why dishes inside favorites fetched with lag
+        //and with error of yndefined dishes
+        // setTimeout(() => {
+          // console.log("DishwithID", this.props.favorites.favorites.dishes);
+        //So because of Loading!!!))))
+
         return (
         <AuthContext.Provider value={this.props.auth.isAuthenticated} >
          
@@ -244,6 +262,8 @@ class Main extends Component {
           />}
            </AuthContext.Provider>
         );
+
+        // })
       };
 
       // const PrivateRoute = ({
@@ -307,6 +327,7 @@ class Main extends Component {
                 <Route path="*" element={<HomePage />} />
                 
               </Route>
+              <Route path="/menu/:dishId" exact element={<DishWithId />} />
              
             
           </Routes>

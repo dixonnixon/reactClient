@@ -57,13 +57,13 @@ import { print1 } from '../addons/middleware'
 export  const configureStore = () => {
     const store = cs({
         reducer: combineReducers({
+            favorites,
             dishes: Dishes,
             // dishes: dishesReducer,
             comments: Comments,
             leaders: Leaders,
             promotions: Promotions,
             auth: Auth,
-            favorites,
 
 
             ...createForms({
@@ -72,5 +72,7 @@ export  const configureStore = () => {
             })
         })
     },  applyMiddleware(thunk, logger, print1));
+
+    console.log("configureStore", store, store.getState());
     return store;
 };
