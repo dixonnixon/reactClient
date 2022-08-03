@@ -4,22 +4,12 @@ import {Breadcrumb,   Button, Card} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './Loading';
+import  DishDetailCard  from './DishDetailCard';
 
 function RenderMenuItem({ dish, deleteFavorite }) {
     return(
-        <Card style={{ width: '18rem' }}>
-            <Card.Img width="100%" variant="right" src={baseUrl + dish.image} 
-                alt={dish.name}
-            />
-            <Card.Body>
-                <Card.Title>{dish.name}</Card.Title>
-                <Card.Text>{dish.description}</Card.Text>
-                <Button  color="danger" onClick={() => deleteFavorite(dish._id)}>
-                    <span className="fa fa-times"></span>
-                </Button>
-            </Card.Body>
-            </Card>
         
+        <DishDetailCard dish={dish} deleteFavorite={deleteFavorite} isFavorite={true} />
     );
 }
 
