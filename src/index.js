@@ -7,6 +7,8 @@ import 'bootstrap-social/bootstrap-social.css';
 
 import './index.css';
 import App from './App';
+import registerServiceWorker from './registerServiceWorker';
+
 // import ThemeSwitcher from './ThemeSwitcher';
 
 import reportWebVitals from './reportWebVitals';
@@ -17,6 +19,7 @@ root.render(
     <App />
   // </React.StrictMode>
 );
+registerServiceWorker();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(// console.log))
