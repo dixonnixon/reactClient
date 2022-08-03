@@ -1,20 +1,14 @@
 import React from 'react';
 
-import {Breadcrumb,   Button, Card} from 'react-bootstrap';
+import {Breadcrumb} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './Loading';
 import  DishDetailCard  from './DishDetailCard';
 
-function RenderMenuItem({ dish, deleteFavorite }) {
-    return(
-        
-        <DishDetailCard dish={dish} deleteFavorite={deleteFavorite} isFavorite={true} />
-    );
-}
+
 
 const Favorites = (props) => {
-    console.log('Favorite', props);
+    // console.log('Favorite', props);
     if (props.favorites.isLoading) {
         return(
             <div className="container">
@@ -38,7 +32,7 @@ const Favorites = (props) => {
         const favorites = props.favorites.favorites.dishes.map((dish) => {
             return (
                 <div key={dish._id} className="col-lg-3 col-md-6 col-sm-6  col-xl-3  mt-2">
-                    <RenderMenuItem dish={dish} deleteFavorite={props.deleteFavorite} />
+                    <DishDetailCard dish={dish} deleteFavorite={props.deleteFavorite} isFavorite={true} />
                 </div>
             );
         });
