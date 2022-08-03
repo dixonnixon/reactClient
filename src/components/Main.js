@@ -88,8 +88,17 @@ export const withRouter = (Component) => {
 
 const mapStateToProps = state => {
   console.log("mapState", state);
+  if(state.auth.isAuthenticated) {
+    return {
+      favorites: state.favorites,
+      dishes: state.dishes,
+      comments: state.comments,
+      promotions: state.promotions,
+      leaders: state.leaders,
+      auth: state.auth,
+    };
+  }
   return {
-    favorites: state.favorites,
     dishes: state.dishes,
     comments: state.comments,
     promotions: state.promotions,
@@ -222,14 +231,14 @@ class Main extends Component {
          );
         console.log("DishwithID", this.props.favorites);
 
-        if(this.props.dishes.isLoading) {
-          return (        <AuthContext.Provider value={this.props.auth.isAuthenticated} >
-            <div>Loading...</div></AuthContext.Provider>)
-        }
-        if(this.props.favorites.isLoading) {
-          return (        <AuthContext.Provider value={this.props.auth.isAuthenticated} >
-            <div>Loading...</div></AuthContext.Provider>)
-        }
+        // if(this.props.dishes.isLoading) {
+        //   return (        <AuthContext.Provider value={this.props.auth.isAuthenticated} >
+        //     <div>Loading...</div></AuthContext.Provider>)
+        // }
+        // if(this.props.favorites.isLoading) {
+        //   return (        <AuthContext.Provider value={this.props.auth.isAuthenticated} >
+        //     <div>Loading...</div></AuthContext.Provider>)
+        // }
         // I don`t know why dishes inside favorites fetched with lag
         //and with error of yndefined dishes
         // setTimeout(() => {

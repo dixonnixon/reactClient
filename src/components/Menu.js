@@ -4,35 +4,7 @@ import { Link } from 'react-router-dom';
 import { Loading } from "./Loading";
 
 import { baseUrl } from "../shared/baseUrl";
-// import Image  from 'react-bootstrap/Image';
-// import ListGroup  from 'react-bootstrap/ListGroup';
-// import DishDetail from './DishDetail';
-
-//mounting, updated, unmounting
-//getDerivedStateFromProps
-//componentDidMount
-
-// export  class Menu extends React.Component {
-
-    // componentDidMount() {
-    //   // console.log("componentDidMount() invoked Menu");
-    // }
-
-    // render() {
-function RenderMenuItem({dish}) {
-  return (
-    // <Card onClick={() => onClick(dish.id)}>
-    
-    <Card key={dish._id}>
-        <Link to={`/menu/${dish._id}`}>
-        <Card.Img width="100%" variant="right" src={baseUrl + dish.image} alt={dish.name} />
-        <Card.ImgOverlay>
-            <Card.Title>{dish.name}</Card.Title>
-        </Card.ImgOverlay>
-        </Link>
-    </Card> 
-  );
-}
+import  DishDetailCard  from './DishDetailCard';
 
 const Menu = (props) => {
   console.log("RenderMenu invoked", props, useEffect(() => {
@@ -50,7 +22,7 @@ const Menu = (props) => {
              onClick={() => this.props.onClick(dish.id)}
            /> */}
            {/* <RenderMenuItem dish={dish} onClick={props.onClick}/> */}
-           <RenderMenuItem  dish={dish} />
+           <DishDetailCard dish={dish} menu={true}/>
          </Col>
              
       );

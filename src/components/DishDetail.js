@@ -1,15 +1,13 @@
 import React, { useContext } from "react";
-import Card from 'react-bootstrap/Card';
-import { ListGroup, Breadcrumb, Button } from 'react-bootstrap';
+import { ListGroup, Breadcrumb } from 'react-bootstrap';
 import Comment from './Comment'
 import { CommentForm } from './CommentForm'
 import { Loading } from "./Loading";
 
 import { Link } from 'react-router-dom';
-import { baseUrl } from "../shared/baseUrl";
 
 import { FadeTransform, Fade, Stagger } from 'react-animation-components';
-import AuthContext from './context/Auth';
+import  DishDetailCard  from './DishDetailCard';
 
 
 
@@ -55,49 +53,20 @@ function RenderCommnets({comments, postComment, dishId}) {
 
 function RenderDish({dish, favorite, postFavorite}) {
     console.log("Rd", dish, favorite);
-    
-
-    // console.log("RenderDish", dish, favorite, postFavorite)
     return (
-        <AuthContext.Consumer>
-            {(isAuthenticated) => {
-                let isFavoriteButton =  (isAuthenticated === false) ? "" : <Button 
-                    color="primary" 
-                    onClick={() => favorite ?  console.log('Already favorite') : postFavorite(dish._id)}>
-                    {favorite ?
-                        <span className="fa fa-heart"></span>
-                        : 
-                        <span className="fa fa-heart-o"></span>
-                    }
-                </Button>;
-
-                console.log("isAuthenticated", isAuthenticated);
-                return (
-                <div  className="col-12 col-md-5 m-1">
-                <FadeTransform in transformProps={{
-                    exitTransform: 'scale(1) translateY(+50%)'
-                    }}
-                >
-                <Card >
-                <Card.Img width="100%" variant="right" src={baseUrl + dish.image} 
-                    alt={dish.name}
+        <div  className="col-12 col-md-5 m-1">
+            <FadeTransform in transformProps={{
+                exitTransform: 'scale(1) translateY(+50%)'
+                }}
+            >
+                <DishDetailCard dish={dish} menu={false}
+                    favorite={favorite}
+                    postFavorite={postFavorite}
                 />
-                <Card.ImgOverlay>
-                {isFavoriteButton}
-                </Card.ImgOverlay>
-                <Card.Body>
-                    <Card.Title>{dish.name}</Card.Title>
-                    <Card.Text>{dish.description}</Card.Text>
-                </Card.Body>
-                </Card>
-                </FadeTransform>
-            </div> 
-            )}
-        }
-        
-        </AuthContext.Consumer>
-
-    );
+            </FadeTransform>
+        </div> 
+    )
+    
 }
 
 
