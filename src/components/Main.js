@@ -230,15 +230,22 @@ class Main extends Component {
           this.props.favorites,
          );
         console.log("DishwithID", this.props.favorites);
+        if(!this.props.auth.isAuthenticated && typeof this.props.favorites === 'undefined') {
+          console.log("redirect????");
+        }
 
         // if(this.props.dishes.isLoading) {
         //   return (        <AuthContext.Provider value={this.props.auth.isAuthenticated} >
         //     <div>Loading...</div></AuthContext.Provider>)
         // }
-        // if(this.props.favorites.isLoading) {
-        //   return (        <AuthContext.Provider value={this.props.auth.isAuthenticated} >
-        //     <div>Loading...</div></AuthContext.Provider>)
-        // }
+
+        if(this.props.auth.isAuthenticated) {
+          if(this.props.favorites.isLoading) {
+            return (        <AuthContext.Provider value={this.props.auth.isAuthenticated} >
+              <div>Loading...</div></AuthContext.Provider>)
+          }
+        }
+        
         // I don`t know why dishes inside favorites fetched with lag
         //and with error of yndefined dishes
         // setTimeout(() => {
